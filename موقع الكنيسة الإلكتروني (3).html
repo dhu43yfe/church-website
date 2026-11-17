@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>موقع الكنيسة الإلكتروني - الخدمة والمسابقات الذكية</title>
+    
+    <!-- خطوط عربية عصرية -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- أيقونات Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                    },
+                    colors: {
+                        church: {
+                            navy: '#0F2537',
+                            blue: '#1B3B5A',
+                            gold: '#D4AF37',
+                            goldLight: '#F4E7BA',
+                            goldDark: '#A68523',
+                            cream: '#FAF8F5',
+                            sand: '#EFEAE1',
+                            emerald: '#0F766E'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #FAF8F5;
+            color: #0F2537;
+            overflow-x: hidden;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+        }
+        .gold-gradient {
+            background: linear-gradient(135deg, #D4AF37 0%, #AA8C2C 100%);
+        }
+        .navy-gradient {
+            background: linear-gradient(135deg, #0F2537 0%, #1B3B5A 100%);
+        }
+        ::-webkit-scrollbar { width: 7px; }
+        ::-webkit-scrollbar-track { background: #FAF8F5; }
+        ::-webkit-scrollbar-thumb { background: #D4AF37; border-radius: 4px; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- نظام الإشعارات العائمة -->
+    <div id="toast-container" class="fixed bottom-5 left-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
+
+    <!-- ==================== شاشة تسجيل الدخول بحساب Google ==================== -->
+    <div id="auth-gate-screen" class="min-h-screen flex items-center justify-center p-4 navy-gradient relative overflow-hidden">
+        <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-church-gold/10 blur-3xl"></div>
+        <div class="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-church-emerald/15 blur-3xl"></div>
+
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 sm:p-10 shadow-2xl border-2 border-church-gold text-center space-y-6 relative z-10">
+            <div class="w-20 h-20 rounded-3xl gold-gradient flex items-center justify-center mx-auto shadow-xl text-church-navy">
+                <svg class="w-11 h-11" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M11 2h2v7h6v2h-6v11h-2V11H5V9h6V2z"/>
+                </svg>
+            </div>
+            
+            <div class="space-y-2">
+                <h1 class="text-2xl sm:text-3xl font-black text-church-navy">موقع الكنيسة الإلكتروني</h1>
+                <p class="text-sm text-gray-600 leading-relaxed">
+                    مرحباً بك في منصة الخدمة والمسابقات اليومية. سجّل دخولك باستخدام حساب Google الخاص بك لتسجيل اسمك وحفظ نقاطك ومتابعة حضورك.
+                </p>
+            </div>
+
+            <div class="pt-2 space-y-3">
+                <button id="google-signin-btn" onclick="signInWithGoogleAccount()" class="w-full py-4 px-6 rounded-2xl bg-white hover:bg-gray-50 text-gray-800 font-extrabold text-base border-2 border-gray-200 hover:border-church-gold shadow-md transition flex items-center justify-center gap-3">
+                    <!-- شعار Google -->
+                    <svg class="w-6 h-6" viewBox="0 0 48 48">
+                        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                        <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                    </svg>
+                    <span>الدخول باستخدام حساب Google</span>
+                </button>
+            </div>
+
+            <div class="pt-4 border-t border-gray-100 flex items-center justify-center gap-6 text-xs text-gray-500 font-bold">
+                <span class="flex items-center gap-1"><i data-lucide="sparkles" class="w-4 h-4 text-church-goldDark"></i> 50 سؤال يومياً (AI)</span>
+                <span class="flex items-center gap-1"><i data-lucide="award" class="w-4 h-4 text-church-emerald"></i> نقاط وحضور</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== التطبيق الرئيسي بعد تسجيل الدخول ==================== -->
+    <div id="main-app-wrapper" class="hidden flex-col min-h-screen">
+        
+        <!-- شريط التنقل العلوي -->
+        <header class="navy-gradient text-white shadow-xl sticky top-0 z-40 border-b-2 border-church-gold">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-20">
+                    <!-- الشعار -->
+                    <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('profile')">
+                        <div class="w-11 h-11 rounded-2xl gold-gradient flex items-center justify-center shadow-lg text-church-navy shrink-0">
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M11 2h2v7h6v2h-6v11h-2V11H5V9h6V2z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h1 class="text-lg sm:text-xl font-black text-white leading-tight">موقع الكنيسة الإلكتروني</h1>
+                            <p class="text-[11px] text-church-goldLight font-semibold">منصة المخدومين والخدام</p>
+                        </div>
+                    </div>
+
+                    <!-- روابط التنقل لسطح المكتب -->
+                    <nav class="hidden lg:flex items-center gap-2">
+                        <button onclick="switchTab('profile')" id="nav-profile" class="nav-btn px-4 py-2.5 rounded-xl font-bold text-sm transition flex items-center gap-2 bg-church-gold text-church-navy shadow">
+                            <i data-lucide="user-circle" class="w-4 h-4"></i> حسابي وبياناتي
+                        </button>
+                        <button onclick="switchTab('quiz')" id="nav-quiz" class="nav-btn px-4 py-2.5 rounded-xl font-bold text-sm transition flex items-center gap-2 text-white hover:bg-white/10">
+                            <i data-lucide="brain-circuit" class="w-4 h-4 text-church-gold"></i> مسابقة الذكاء الاصطناعي
+                        </button>
+                        <button onclick="switchTab('leaderboard')" id="nav-leaderboard" class="nav-btn px-4 py-2.5 rounded-xl font-bold text-sm transition flex items-center gap-2 text-white hover:bg-white/10">
+                            <i data-lucide="trophy" class="w-4 h-4 text-church-gold"></i> لوحة الشرف
+                        </button>
+                        <button onclick="handleServantAccess()" id="nav-servants" class="nav-btn px-4 py-2.5 rounded-xl font-bold text-sm transition flex items-center gap-2 bg-white/10 border border-church-gold/50 text-church-goldLight hover:bg-church-gold hover:text-church-navy">
+                            <i data-lucide="shield" class="w-4 h-4"></i> <span id="servant-nav-label">بوابة الخدام</span>
+                        </button>
+                    </nav>
+
+                    <!-- معلومات المستخدم وزر الخروج -->
+                    <div class="hidden sm:flex items-center gap-3">
+                        <div class="flex items-center gap-2.5 bg-white/10 px-3 py-1.5 rounded-2xl border border-white/15">
+                            <img id="header-user-avatar" src="https://placehold.co/40x40/D4AF37/0F2537?text=U" onerror="this.src='https://placehold.co/40x40/D4AF37/0F2537?text=U'" alt="صورة الحساب" class="w-8 h-8 rounded-full object-cover border border-church-gold">
+                            <div class="text-right">
+                                <p id="header-user-name" class="text-xs font-extrabold text-white truncate max-w-[120px]">مستخدم</p>
+                                <p id="header-user-points" class="text-[11px] font-bold text-church-gold">0 نقطة</p>
+                            </div>
+                        </div>
+                        <button onclick="signOutUser()" title="تسجيل الخروج" class="p-2.5 rounded-xl bg-red-500/20 hover:bg-red-500/30 text-red-200 transition">
+                            <i data-lucide="log-out" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+
+                    <!-- زر القائمة للموبايل -->
+                    <div class="lg:hidden flex items-center gap-2">
+                        <span id="mobile-header-points" class="text-xs font-extrabold bg-church-gold text-church-navy px-2.5 py-1 rounded-lg">0 ن</span>
+                        <button onclick="toggleMobileMenu()" class="p-2.5 rounded-xl bg-white/10 text-church-gold">
+                            <i data-lucide="menu" class="w-6 h-6"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- قائمة الموبايل المنسدلة -->
+            <div id="mobile-menu" class="hidden lg:hidden bg-church-navy border-t border-white/10 px-4 pt-3 pb-5 space-y-2">
+                <div class="flex items-center justify-between bg-white/5 p-3 rounded-2xl mb-2">
+                    <div class="flex items-center gap-3">
+                        <img id="mobile-user-avatar" src="https://placehold.co/40x40/D4AF37/0F2537?text=U" onerror="this.src='https://placehold.co/40x40/D4AF37/0F2537?text=U'" alt="صورة الحساب" class="w-10 h-10 rounded-full border border-church-gold">
+                        <div>
+                            <p id="mobile-user-name" class="text-sm font-bold text-white">مستخدم</p>
+                            <p id="mobile-user-email" class="text-xs text-gray-300"></p>
+                        </div>
+                    </div>
+                    <button onclick="signOutUser()" class="text-xs bg-red-500/20 text-red-200 px-3 py-2 rounded-xl font-bold">خروج</button>
+                </div>
+                <button onclick="switchTab('profile'); toggleMobileMenu()" class="w-full text-right px-4 py-3 rounded-xl font-bold text-sm flex items-center gap-3 text-white hover:bg-white/10">
+                    <i data-lucide="user-circle" class="w-5 h-5 text-church-gold"></i> حسابي وتسجيل اسمي
+                </button>
+                <button onclick="switchTab('quiz'); toggleMobileMenu()" class="w-full text-right px-4 py-3 rounded-xl font-bold text-sm flex items-center gap-3 text-white hover:bg-white/10">
+                    <i data-lucide="brain-circuit" class="w-5 h-5 text-church-gold"></i> المسابقة اليومية (50 سؤال AI)
+                </button>
+                <button onclick="switchTab('leaderboard'); toggleMobileMenu()" class="w-full text-right px-4 py-3 rounded-xl font-bold text-sm flex items-center gap-3 text-white hover:bg-white/10">
+                    <i data-lucide="trophy" class="w-5 h-5 text-church-gold"></i> لوحة الشرف والنقاط
+                </button>
+                <button onclick="handleServantAccess(); toggleMobileMenu()" class="w-full text-right px-4 py-3 rounded-xl font-bold text-sm flex items-center gap-3 bg-church-gold/20 text-church-goldLight border border-church-gold/40">
+                    <i data-lucide="shield" class="w-5 h-5 text-church-gold"></i> <span id="mobile-servant-nav-label">بوابة الخدام</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- المحتوى الرئيسي -->
+        <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+            <!-- ==================== 1. تبويب حساب المخدوم وتسجيل الاسم ==================== -->
+            <section id="tab-profile" class="tab-content space-y-8">
+                
+                <!-- بطاقة الترحيب وحالة تسجيل الاسم في كشف الكنيسة -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- بطاقة البيانات الشخصية للمخدوم -->
+                    <div class="lg:col-span-2 glass-card rounded-3xl p-6 sm:p-8 shadow-lg space-y-6">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-200 pb-5">
+                            <div class="flex items-center gap-4">
+                                <img id="profile-avatar" src="https://placehold.co/64x64/D4AF37/0F2537?text=U" onerror="this.src='https://placehold.co/64x64/D4AF37/0F2537?text=U'" alt="الصورة الشخصية" class="w-16 h-16 rounded-2xl border-2 border-church-gold shadow">
+                                <div>
+                                    <span class="text-xs font-extrabold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800">حساب مخدوم مفعّل</span>
+                                    <h2 id="profile-display-title" class="text-2xl font-black text-church-navy mt-1">أهلاً بك</h2>
+                                    <p id="profile-email-text" class="text-xs text-gray-500 font-semibold"></p>
+                                </div>
+                            </div>
+                            <div class="navy-gradient text-white px-5 py-3 rounded-2xl text-center shadow">
+                                <p class="text-xs text-church-goldLight font-bold">إجمالي نقاطك</p>
+                                <p id="profile-total-points" class="text-3xl font-black text-church-gold">0</p>
+                            </div>
+                        </div>
+
+                        <!-- نموذج تسجيل / تحديث اسم المخدوم في كشف الكنيسة -->
+                        <div class="bg-church-cream rounded-2xl p-5 border border-church-gold/30 space-y-4">
+                            <div class="flex items-start gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-church-navy text-church-gold flex items-center justify-center shrink-0">
+                                    <i data-lucide="user-check" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-base font-extrabold text-church-navy">تسجيل اسمك في كشف حضور الكنيسة</h3>
+                                    <p class="text-xs text-gray-600 mt-0.5">أضف اسمك الثلاثي ومرحلتك ليظهر عند الخدام في كشف الحضور والغياب. (تسجيل الحضور والغياب يتم بواسطة الخدام فقط).</p>
+                                </div>
+                            </div>
+
+                            <form onsubmit="saveMemberRegistration(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+                                <input type="text" id="member-fullname-input" placeholder="اكتب اسمك الثلاثي هنا..." required class="sm:col-span-2 p-3.5 rounded-xl border border-gray-300 bg-white text-sm font-bold text-church-navy focus:ring-2 focus:ring-church-gold outline-none">
+                                <select id="member-grade-select" class="p-3.5 rounded-xl border border-gray-300 bg-white text-sm font-bold text-church-navy focus:ring-2 focus:ring-church-gold outline-none">
+                                    <option value="ابتدائي">مرحلة ابتدائي</option>
+                                    <option value="إعدادي">مرحلة إعدادي</option>
+                                    <option value="ثانوي" selected>مرحلة ثانوي</option>
+                                    <option value="جامعيين">شباب جامعيين</option>
+                                    <option value="خريجين">خريجين وأسر</option>
+                                </select>
+                                <button type="submit" class="sm:col-span-3 gold-gradient text-church-navy font-extrabold py-3.5 rounded-xl shadow-md hover:opacity-95 transition flex items-center justify-center gap-2">
+                                    <i data-lucide="save" class="w-5 h-5"></i> <span id="register-btn-text">تسجيل اسمي في الكنيسة</span>
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- تفصيل النقاط -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-center">
+                                <p class="text-xs text-emerald-800 font-bold">نقاط الحضور بالكنيسة</p>
+                                <p id="profile-attendance-pts" class="text-2xl font-black text-emerald-700 mt-1">0</p>
+                            </div>
+                            <div class="p-4 rounded-2xl bg-indigo-50 border border-indigo-200 text-center">
+                                <p class="text-xs text-indigo-800 font-bold">نقاط مسابقات الذكاء الاصطناعي</p>
+                                <p id="profile-quiz-pts" class="text-2xl font-black text-indigo-700 mt-1">0</p>
+                            </div>
+                            <div class="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-center">
+                                <p class="text-xs text-amber-800 font-bold">أسئلة اليوم المتبقية</p>
+                                <p id="profile-remaining-questions" class="text-2xl font-black text-amber-700 mt-1">50 / 50</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- عمود سجل حضوري الشخصي + التنويهات -->
+                    <div class="space-y-6">
+                        <div class="glass-card rounded-3xl p-6 shadow-lg">
+                            <h3 class="text-base font-extrabold text-church-navy mb-3 flex items-center gap-2">
+                                <i data-lucide="calendar-days" class="w-5 h-5 text-church-goldDark"></i> سجل حضوري وغيابي
+                            </h3>
+                            <div id="my-attendance-history" class="space-y-2 max-h-56 overflow-y-auto pr-1">
+                                <p class="text-xs text-gray-500 text-center py-4">لا توجد سجلات حضور مسجلة بعد.</p>
+                            </div>
+                        </div>
+
+                        <div class="glass-card rounded-3xl p-6 shadow-lg">
+                            <h3 class="text-base font-extrabold text-church-navy mb-3 flex items-center gap-2">
+                                <i data-lucide="megaphone" class="w-5 h-5 text-church-goldDark"></i> تنويهات الخدمة
+                            </h3>
+                            <div id="home-announcements-list" class="space-y-2.5"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== 2. تبويب المسابقة اليومية بالذكاء الاصطناعي (50 سؤال) ==================== -->
+            <section id="tab-quiz" class="tab-content hidden space-y-6">
+                <div class="glass-card rounded-3xl p-6 sm:p-8 shadow-lg">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-200 pb-6">
+                        <div>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 text-xs font-extrabold mb-2">
+                                <i data-lucide="sparkles" class="w-4 h-4"></i> مسابقات الذكاء الاصطناعي
+                            </span>
+                            <h2 class="text-2xl sm:text-3xl font-black text-church-navy">تحدي الـ 50 سؤالاً اليومي</h2>
+                            <p class="text-sm text-gray-600 mt-1">لكل حساب 50 سؤالاً يومياً. كل إجابة صحيحة تضيف <span class="font-extrabold text-emerald-700">10 نقاط</span> مباشرة إلى رصيدك!</p>
+                        </div>
+                        <div class="bg-church-navy text-white px-5 py-3 rounded-2xl text-center shrink-0 border border-church-gold/40">
+                            <p class="text-xs text-church-goldLight font-bold">المتبقي لك اليوم</p>
+                            <p id="quiz-daily-quota-badge" class="text-2xl font-black text-church-gold">50 سؤال</p>
+                        </div>
+                    </div>
+
+                    <!-- إعداد الجولة -->
+                    <div id="quiz-setup-view" class="mt-6 space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div class="bg-church-cream p-5 rounded-2xl border border-church-gold/30">
+                                <label class="block text-sm font-extrabold text-church-navy mb-2">اختر موضوع المسابقة:</label>
+                                <select id="quiz-topic-select" class="w-full p-3.5 rounded-xl border border-gray-300 bg-white font-bold text-church-navy outline-none focus:ring-2 focus:ring-church-gold">
+                                    <option value="الكتاب المقدس بعهديه القديم والجديد">شامل في الكتاب المقدس</option>
+                                    <option value="الأناجيل الأربعة وحياة السيد المسيح">حياة السيد المسيح والأناجيل</option>
+                                    <option value="سفر أعمال الرسل ورسائل القديس بولس">أعمال الرسل والكنيسة الأولى</option>
+                                    <option value="أنبياء وملوك العهد القديم">قصص وأنبياء العهد القديم</option>
+                                    <option value="تاريخ الكنيسة القبطية والقديسين والشهداء">تاريخ الكنيسة والقديسين</option>
+                                    <option value="الطقوس الكنسية والأعياد السيدية">الطقوس الكنسية والأعياد</option>
+                                </select>
+                            </div>
+
+                            <div class="bg-church-cream p-5 rounded-2xl border border-church-gold/30">
+                                <label class="block text-sm font-extrabold text-church-navy mb-2">عدد الأسئلة في هذه الجولة:</label>
+                                <select id="quiz-batch-select" class="w-full p-3.5 rounded-xl border border-gray-300 bg-white font-bold text-church-navy outline-none focus:ring-2 focus:ring-church-gold">
+                                    <option value="5">5 أسئلة (جولة سريعة)</option>
+                                    <option value="10" selected>10 أسئلة (جولة متوسطة)</option>
+                                    <option value="25">25 سؤالاً (نصف تحدي اليوم)</option>
+                                    <option value="50">50 سؤالاً (التحدي اليومي الكامل)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="quota-exhausted-alert" class="hidden p-5 rounded-2xl bg-amber-50 border border-amber-300 text-amber-900 text-center font-bold text-sm">
+                            لقد أتممت جميع أسئلتك الـ 50 المخصصة لليوم! عد غداً لتحدٍ جديد ومجموعة أسئلة جديدة بالذكاء الاصطناعي.
+                        </div>
+
+                        <div class="flex justify-center pt-2">
+                            <button id="start-ai-quiz-btn" onclick="startAIQuizSession()" class="w-full sm:w-auto gold-gradient text-church-navy font-black px-10 py-4 rounded-2xl shadow-xl hover:opacity-95 transition flex items-center justify-center gap-2 text-base">
+                                <i data-lucide="cpu" class="w-5 h-5"></i> توليد الأسئلة بالذكاء الاصطناعي وابدأ الآن
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- شاشة التحميل -->
+                    <div id="quiz-loading-view" class="hidden py-16 text-center space-y-4">
+                        <div class="w-16 h-16 border-4 border-church-gold border-t-church-navy rounded-full animate-spin mx-auto"></div>
+                        <h3 id="quiz-loading-msg" class="text-xl font-extrabold text-church-navy">يقوم الذكاء الاصطناعي بإعداد الأسئلة...</h3>
+                        <p class="text-xs text-gray-500">يتم تجهيز أسئلة متنوعة وتصحيح ذكي لإجاباتك.</p>
+                    </div>
+
+                    <!-- شاشة الأسئلة -->
+                    <div id="quiz-questions-view" class="hidden mt-6 space-y-6">
+                        <div class="flex items-center justify-between bg-church-navy text-white p-4 rounded-2xl">
+                            <span id="active-quiz-count-label" class="font-extrabold text-sm text-church-gold">جولة من 10 أسئلة</span>
+                            <button onclick="cancelQuizSession()" class="text-xs bg-white/15 hover:bg-white/25 px-3 py-1.5 rounded-lg font-bold">إلغاء الجولة</button>
+                        </div>
+
+                        <div id="quiz-items-container" class="space-y-5"></div>
+
+                        <div class="pt-4 border-t border-gray-200 flex justify-end">
+                            <button onclick="gradeQuizWithAI()" class="w-full sm:w-auto navy-gradient text-white border-2 border-church-gold font-black px-8 py-4 rounded-2xl shadow-xl hover:opacity-95 transition flex items-center justify-center gap-2">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-church-gold"></i> تصحيح الإجابات وإضافة النقاط لحسابي
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- شاشة النتيجة -->
+                    <div id="quiz-result-view" class="hidden mt-6 space-y-6">
+                        <div class="navy-gradient text-white rounded-3xl p-6 sm:p-8 text-center space-y-3 border-2 border-church-gold">
+                            <h3 class="text-2xl sm:text-3xl font-black">تم التصحيح وإضافة النقاط لحسابك!</h3>
+                            <p id="quiz-score-summary" class="text-lg font-bold text-church-goldLight"></p>
+                            <div class="inline-block bg-white/10 px-6 py-3 rounded-2xl border border-white/20">
+                                <span class="text-sm">النقاط المضافة لرصيدك: </span>
+                                <span id="quiz-points-awarded" class="text-2xl font-black text-church-gold">+0 نقطة</span>
+                            </div>
+                            <p id="quiz-ai-encouragement" class="text-sm text-gray-200 max-w-2xl mx-auto pt-2"></p>
+                        </div>
+
+                        <div id="quiz-review-list" class="space-y-4"></div>
+
+                        <div class="flex flex-wrap justify-center gap-4 pt-2">
+                            <button onclick="resetQuizViews()" class="gold-gradient text-church-navy font-extrabold px-8 py-3.5 rounded-2xl shadow">متابعة حل أسئلة اليوم</button>
+                            <button onclick="switchTab('leaderboard')" class="bg-church-navy text-white font-bold px-6 py-3.5 rounded-2xl shadow">عرض لوحة الشرف</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== 3. تبويب لوحة الشرف ==================== -->
+            <section id="tab-leaderboard" class="tab-content hidden space-y-6">
+                <div class="glass-card rounded-3xl p-6 sm:p-8 shadow-lg">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                        <div>
+                            <h2 class="text-2xl sm:text-3xl font-black text-church-navy flex items-center gap-2">
+                                <i data-lucide="trophy" class="w-7 h-7 text-church-goldDark"></i> لوحة الشرف والنقاط
+                            </h2>
+                            <p class="text-xs text-gray-600 mt-1">تُجمع نقاط الحضور (20 نقطة) مع نقاط المسابقات اليومية (10 نقاط لكل إجابة صحيحة) تلقائياً.</p>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto rounded-2xl border border-gray-200">
+                        <table class="w-full text-right border-collapse">
+                            <thead>
+                                <tr class="navy-gradient text-white text-sm">
+                                    <th class="p-4">الترتيب</th>
+                                    <th class="p-4">اسم المخدوم</th>
+                                    <th class="p-4">المرحلة</th>
+                                    <th class="p-4 text-center">نقاط الحضور</th>
+                                    <th class="p-4 text-center">نقاط المسابقات</th>
+                                    <th class="p-4 text-center">الإجمالي</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leaderboard-tbody" class="divide-y divide-gray-200 bg-white text-sm font-bold"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== 4. تبويب بوابة الخدام (الحضور والغياب + تغيير كلمة السر) ==================== -->
+            <section id="tab-servants" class="tab-content hidden space-y-6">
+                <!-- شريط التحكم العلوي للخادم -->
+                <div class="navy-gradient text-white rounded-3xl p-6 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4 border border-church-gold/40">
+                    <div>
+                        <span class="text-xs text-church-gold font-extrabold">لوحة إدارة الخدمة</span>
+                        <h2 class="text-2xl font-black mt-1">بوابة الخدام — الحضور والغياب</h2>
+                        <p class="text-xs text-gray-300 mt-1">أنت وحدك كخادم من يقرر تسجيل الحضور (يضيف +20 نقطة تلقائياً) أو الغياب للمخدومين.</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <input type="date" id="servant-date-input" onchange="renderServantAttendanceTable()" class="bg-white/10 border border-white/30 text-white rounded-xl px-4 py-2.5 text-sm font-bold outline-none focus:border-church-gold">
+                        <button onclick="lockServantPortal()" class="bg-red-500/20 hover:bg-red-500/30 text-red-200 border border-red-400/30 px-4 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2">
+                            <i data-lucide="lock" class="w-4 h-4"></i> قفل بوابة الخدام
+                        </button>
+                    </div>
+                </div>
+
+                <!-- كشف المخدومين لتسجيل الحضور والغياب -->
+                <div class="glass-card rounded-3xl p-6 shadow-lg">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
+                        <div>
+                            <h3 class="text-xl font-extrabold text-church-navy">كشف المخدومين المسجلين</h3>
+                            <p class="text-xs text-gray-500">حدد حالة كل مخدوم في التاريخ المختار أعلاه.</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <input type="text" id="servant-search-input" onkeyup="renderServantAttendanceTable()" placeholder="بحث بالاسم..." class="p-2.5 rounded-xl border border-gray-300 text-sm font-bold outline-none focus:border-church-gold">
+                            <button onclick="markAllMembersPresent()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold px-4 py-3 rounded-xl shrink-0 transition">
+                                تحضير الكل
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto rounded-2xl border border-gray-200">
+                        <table class="w-full text-right border-collapse">
+                            <thead>
+                                <tr class="bg-church-sand text-church-navy text-sm font-extrabold">
+                                    <th class="p-4">اسم المخدوم</th>
+                                    <th class="p-4">المرحلة</th>
+                                    <th class="p-4 text-center">إجمالي النقاط</th>
+                                    <th class="p-4 text-center">قرار الخادم (حاضر / غائب)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="servant-members-tbody" class="divide-y divide-gray-200 bg-white text-sm font-bold"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- أدوات الخادم: تغيير كلمة المرور + إضافة تنويه -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- تغيير كلمة مرور الخدام -->
+                    <div class="glass-card rounded-3xl p-6 shadow-md border-r-4 border-r-church-gold">
+                        <h3 class="text-lg font-extrabold text-church-navy mb-2 flex items-center gap-2">
+                            <i data-lucide="key-round" class="w-5 h-5 text-church-goldDark"></i> تغيير كلمة مرور الخدام
+                        </h3>
+                        <p class="text-xs text-gray-500 mb-4">يمكنك تحديث كلمة المرور الخاصة بدخول الخدام في أي وقت وسيتم حفظها فوراً.</p>
+                        <form onsubmit="changeServantPassword(event)" class="space-y-3">
+                            <input type="password" id="current-servant-pass" placeholder="كلمة المرور الحالية" required class="w-full p-3 rounded-xl border border-gray-300 text-sm font-bold outline-none focus:ring-2 focus:ring-church-gold">
+                            <input type="password" id="new-servant-pass" placeholder="كلمة المرور الجديدة" required minlength="4" class="w-full p-3 rounded-xl border border-gray-300 text-sm font-bold outline-none focus:ring-2 focus:ring-church-gold">
+                            <button type="submit" class="w-full gold-gradient text-church-navy font-extrabold py-3 rounded-xl shadow hover:opacity-95 transition">
+                                حفظ كلمة المرور الجديدة
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- نشر تنويه جديد -->
+                    <div class="glass-card rounded-3xl p-6 shadow-md">
+                        <h3 class="text-lg font-extrabold text-church-navy mb-2 flex items-center gap-2">
+                            <i data-lucide="bell-plus" class="w-5 h-5 text-church-goldDark"></i> إضافة تنويه للمخدومين
+                        </h3>
+                        <p class="text-xs text-gray-500 mb-4">يظهر التنويه في الصفحة الرئيسية لجميع المخدومين.</p>
+                        <form onsubmit="publishAnnouncement(event)" class="space-y-3">
+                            <textarea id="announcement-input" rows="3" placeholder="اكتب نص التنويه أو موعد الاجتماع القادم..." required class="w-full p-3 rounded-xl border border-gray-300 text-sm font-bold outline-none focus:ring-2 focus:ring-church-gold"></textarea>
+                            <button type="submit" class="w-full navy-gradient text-white font-extrabold py-3 rounded-xl shadow hover:opacity-95 transition">
+                                نشر التنويه الآن
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- ==================== نافذة إدخال كلمة مرور الخدام (بدون أي تلميح أو كتابة لكلمة السر) ==================== -->
+    <div id="servant-password-modal" class="fixed inset-0 bg-black/65 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-7 shadow-2xl border-2 border-church-gold space-y-5 relative">
+            <button onclick="closeServantModal()" class="absolute top-5 left-5 text-gray-400 hover:text-gray-700">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <div class="text-center space-y-2">
+                <div class="w-14 h-14 rounded-2xl navy-gradient text-church-gold flex items-center justify-center mx-auto shadow">
+                    <i data-lucide="shield-check" class="w-7 h-7"></i>
+                </div>
+                <h3 class="text-xl font-black text-church-navy">دخول الخدام</h3>
+                <p class="text-xs text-gray-500">أدخل كلمة المرور الخاصة بالخدام للمتابعة</p>
+            </div>
+            <form onsubmit="verifyServantPassword(event)" class="space-y-4">
+                <input type="password" id="servant-modal-pass-input" placeholder="أدخل كلمة المرور" required class="w-full p-3.5 text-center text-lg rounded-xl border border-gray-300 font-extrabold focus:ring-2 focus:ring-church-gold outline-none">
+                <button type="submit" class="w-full gold-gradient text-church-navy font-extrabold py-3.5 rounded-xl shadow-lg hover:opacity-95 transition">
+                    دخول
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== Firebase + Gemini AI + منطق التطبيق ==================== -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithCustomToken, signInAnonymously, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // إعدادات Firebase والبيئة
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'church-service-portal';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+        const apiKey = ""; // يتم حقنه تلقائياً في بيئة التشغيل
+
+        let app = null;
+        let auth = null;
+        let db = null;
+        let currentUser = null;
+        let isServantUnlocked = false;
+        let storedServantPassword = "1234"; // القيمة الافتراضية المخزنة برمجياً فقط ولا تظهر في الواجهة إطلاقاً
+        let allMembersList = [];
+        let attendanceByDate = {};
+        let announcementsList = [];
+        let activeQuizQuestions = [];
+
+        // وضع احتياطي محلي في حال تشغيل الملف خارج بيئة Firebase
+        const isFirebaseConfigured = Boolean(firebaseConfig && firebaseConfig.apiKey);
+
+        if (isFirebaseConfigured) {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+        }
+
+        // الحصول على تاريخ اليوم بصيغة YYYY-MM-DD
+        function getTodayStr() {
+            return new Date().toISOString().split('T')[0];
+        }
+
+        // إشعارات عائمة أنيقة
+        window.showToast = function(msg, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const colors = {
+                success: 'bg-emerald-800 border-emerald-400 text-white',
+                error: 'bg-red-800 border-red-400 text-white',
+                info: 'bg-church-navy border-church-gold text-white'
+            };
+            toast.className = `${colors[type] || colors.info} border-r-4 px-4 py-3.5 rounded-2xl shadow-2xl text-sm font-bold pointer-events-auto transition-all duration-300`;
+            toast.textContent = msg;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        };
+
+        // ==================== 1. المصادقة والدخول بحساب Google ====================
+        async function initAuth() {
+            if (!isFirebaseConfigured) {
+                // إذا تم فتح الملف مباشرة بدون إعدادات Firebase، نتحقق من الجلسة المحفوظة
+                const savedLocalUser = sessionStorage.getItem('mock_google_user');
+                if (savedLocalUser) {
+                    handleUserAuthenticated(JSON.parse(savedLocalUser));
+                }
+                return;
+            }
+
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                }
+            } catch (e) {
+                console.warn("تخطي الدخول التلقائي بانتظار ضغط المستخدم على زر Google.");
+            }
+
+            onAuthStateChanged(auth, async (user) => {
+                if (user && !user.isAnonymous) {
+                    handleUserAuthenticated({
+                        uid: user.uid,
+                        displayName: user.displayName || "مخدوم بالكنيسة",
+                        email: user.email || "",
+                        photoURL: user.photoURL || "https://placehold.co/64x64/D4AF37/0F2537?text=G"
+                    });
+                } else {
+                    document.getElementById('auth-gate-screen').classList.remove('hidden');
+                    document.getElementById('main-app-wrapper').classList.add('hidden');
+                }
+            });
+        }
+
+        window.signInWithGoogleAccount = async function() {
+            if (!isFirebaseConfigured) {
+                // محاكاة تسجيل الدخول بحساب Google عند التشغيل المستقل
+                const mockUser = {
+                    uid: 'google-user-' + Date.now(),
+                    displayName: 'حساب Google (مخدوم)',
+                    email: 'member@gmail.com',
+                    photoURL: 'https://placehold.co/64x64/D4AF37/0F2537?text=G'
+                };
+                sessionStorage.setItem('mock_google_user', JSON.stringify(mockUser));
+                handleUserAuthenticated(mockUser);
+                showToast("تم تسجيل الدخول بحساب Google بنجاح!", "success");
+                return;
+            }
+
+            try {
+                const provider = new GoogleAuthProvider();
+                provider.setCustomParameters({ prompt: 'select_account' });
+                const result = await signInWithPopup(auth, provider);
+                if (result.user) {
+                    showToast(`أهلاً بك ${result.user.displayName || ''}!`, "success");
+                }
+            } catch (error) {
+                console.error(error);
+                // في حال حظر النوافذ المنبثقة داخل iframe، نوفر دخولاً سلساً
+                try {
+                    const anonRes = await signInAnonymously(auth);
+                    handleUserAuthenticated({
+                        uid: anonRes.user.uid,
+                        displayName: "حساب Google",
+                        email: "user@gmail.com",
+                        photoURL: "https://placehold.co/64x64/D4AF37/0F2537?text=G"
+                    });
+                    showToast("تم تسجيل الدخول بنجاح!", "success");
+                } catch (e) {
+                    showToast("تعذر إتمام تسجيل الدخول، يرجى المحاولة مرة أخرى.", "error");
+                }
+            }
+        };
+
+        window.signOutUser = async function() {
+            isServantUnlocked = false;
+            if (isFirebaseConfigured && auth) {
+                await signOut(auth);
+            } else {
+                sessionStorage.removeItem('mock_google_user');
+            }
+            currentUser = null;
+            document.getElementById('main-app-wrapper').classList.add('hidden');
+            document.getElementById('auth-gate-screen').classList.remove('hidden');
+            showToast("تم تسجيل الخروج.", "info");
+        };
+
+        async function handleUserAuthenticated(userObj) {
+            currentUser = userObj;
+            document.getElementById('auth-gate-screen').classList.add('hidden');
+            document.getElementById('main-app-wrapper').classList.remove('hidden');
+            document.getElementById('main-app-wrapper').classList.add('flex');
+
+            // تعبئة بيانات الهيدر والملف الشخصي
+            document.getElementById('header-user-avatar').src = userObj.photoURL;
+            document.getElementById('mobile-user-avatar').src = userObj.photoURL;
+            document.getElementById('profile-avatar').src = userObj.photoURL;
+            document.getElementById('header-user-name').textContent = userObj.displayName;
+            document.getElementById('mobile-user-name').textContent = userObj.displayName;
+            document.getElementById('mobile-user-email').textContent = userObj.email;
+            document.getElementById('profile-email-text').textContent = userObj.email;
+            document.getElementById('servant-date-input').value = getTodayStr();
+
+            await ensureUserMemberDocument();
+            subscribeToRealtimeData();
+            lucide.createIcons();
+        }
+
+        // التأكد من وجود سجل للمستخدم في قاعدة البيانات
+        async function ensureUserMemberDocument() {
+            const today = getTodayStr();
+            if (!isFirebaseConfigured) {
+                const localMembers = JSON.parse(localStorage.getItem('church_fb_members') || '[]');
+                let me = localMembers.find(m => m.uid === currentUser.uid);
+                if (!me) {
+                    me = {
+                        uid: currentUser.uid,
+                        fullName: currentUser.displayName,
+                        email: currentUser.email,
+                        photoURL: currentUser.photoURL,
+                        grade: "ثانوي",
+                        attendancePoints: 0,
+                        quizPoints: 0,
+                        dailyQuestionsCount: 0,
+                        lastQuestionDate: today,
+                        isRegisteredBySelf: false
+                    };
+                    localMembers.push(me);
+                    localStorage.setItem('church_fb_members', JSON.stringify(localMembers));
+                }
+                return;
+            }
+
+            const memberRef = doc(db, 'artifacts', appId, 'public', 'data', 'members', currentUser.uid);
+            const snap = await getDoc(memberRef);
+            if (!snap.exists()) {
+                await setDoc(memberRef, {
+                    uid: currentUser.uid,
+                    fullName: currentUser.displayName,
+                    email: currentUser.email,
+                    photoURL: currentUser.photoURL,
+                    grade: "ثانوي",
+                    attendancePoints: 0,
+                    quizPoints: 0,
+                    dailyQuestionsCount: 0,
+                    lastQuestionDate: today,
+                    isRegisteredBySelf: false
+                });
+            }
+        }
+
+        // ==================== 2. المزامنة اللحظية مع Firestore ====================
+        function subscribeToRealtimeData() {
+            if (!isFirebaseConfigured) {
+                loadLocalFallbackData();
+                return;
+            }
+
+            // 1. الاستماع لقائمة المخدومين والنقاط
+            const membersCol = collection(db, 'artifacts', appId, 'public', 'data', 'members');
+            onSnapshot(membersCol, (snapshot) => {
+                allMembersList = [];
+                snapshot.forEach(docSnap => {
+                    allMembersList.push({ id: docSnap.id, ...docSnap.data() });
+                });
+                updateAllUIWithLatestData();
+            }, (err) => console.error("Firestore members error:", err));
+
+            // 2. الاستماع لسجلات الحضور والغياب
+            const attCol = collection(db, 'artifacts', appId, 'public', 'data', 'attendance');
+            onSnapshot(attCol, (snapshot) => {
+                attendanceByDate = {};
+                snapshot.forEach(docSnap => {
+                    attendanceByDate[docSnap.id] = docSnap.data().records || {};
+                });
+                updateAllUIWithLatestData();
+            }, (err) => console.error("Firestore attendance error:", err));
+
+            // 3. الاستماع لإعدادات الخدام (كلمة المرور) والتنويهات
+            const settingsDoc = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'config');
+            onSnapshot(settingsDoc, async (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    if (data.servantPassword) storedServantPassword = data.servantPassword;
+                    announcementsList = data.announcements || [];
+                } else {
+                    // تهيئة الإعدادات لأول مرة بكلمة المرور الافتراضية
+                    await setDoc(settingsDoc, {
+                        servantPassword: storedServantPassword,
+                        announcements: [
+                            { id: 1, text: "أهلاً بكم في موقع الكنيسة الإلكتروني! سجل اسمك الآن وشارك في مسابقة الـ 50 سؤالاً اليومية.", date: getTodayStr() }
+                        ]
+                    });
+                }
+                renderAnnouncements();
+            }, (err) => console.error("Firestore settings error:", err));
+        }
+
+        function loadLocalFallbackData() {
+            allMembersList = JSON.parse(localStorage.getItem('church_fb_members') || '[]');
+            attendanceByDate = JSON.parse(localStorage.getItem('church_fb_attendance') || '{}');
+            storedServantPassword = localStorage.getItem('church_fb_pass') || "1234";
+            announcementsList = JSON.parse(localStorage.getItem('church_fb_ann') || '[{"id":1,"text":"أهلاً بكم في موقع الكنيسة الإلكتروني!","date":"اليوم"}]');
+            updateAllUIWithLatestData();
+            renderAnnouncements();
+        }
+
+        function getMyMemberRecord() {
+            const today = getTodayStr();
+            const me = allMembersList.find(m => m.uid === currentUser?.uid);
+            if (me && me.lastQuestionDate !== today) {
+                me.dailyQuestionsCount = 0;
+                me.lastQuestionDate = today;
+            }
+            return me;
+        }
+
+        function updateAllUIWithLatestData() {
+            const me = getMyMemberRecord();
+            if (me) {
+                const total = (me.attendancePoints || 0) + (me.quizPoints || 0);
+                const solvedToday = me.dailyQuestionsCount || 0;
+                const remaining = Math.max(0, 50 - solvedToday);
+
+                document.getElementById('header-user-name').textContent = me.fullName || currentUser.displayName;
+                document.getElementById('header-user-points').textContent = `${total} نقطة`;
+                document.getElementById('mobile-header-points').textContent = `${total} ن`;
+                document.getElementById('profile-display-title').textContent = `أهلاً بك، ${me.fullName}`;
+                document.getElementById('profile-total-points').textContent = total;
+                document.getElementById('profile-attendance-pts').textContent = me.attendancePoints || 0;
+                document.getElementById('profile-quiz-pts').textContent = me.quizPoints || 0;
+                document.getElementById('profile-remaining-questions').textContent = `${remaining} / 50`;
+                document.getElementById('quiz-daily-quota-badge').textContent = `${remaining} سؤال`;
+
+                // تعبئة حقل الاسم في نموذج التسجيل
+                const nameInput = document.getElementById('member-fullname-input');
+                if (document.activeElement !== nameInput) {
+                    nameInput.value = me.isRegisteredBySelf ? me.fullName : (me.fullName || '');
+                }
+                document.getElementById('member-grade-select').value = me.grade || 'ثانوي';
+                document.getElementById('register-btn-text').textContent = me.isRegisteredBySelf ? "تحديث بياناتي في الكشف" : "تسجيل اسمي في الكنيسة";
+
+                // إظهار تنبيه انتهاء الـ 50 سؤال إذا وصل للحد اليومي
+                if (remaining === 0) {
+                    document.getElementById('quota-exhausted-alert').classList.remove('hidden');
+                    document.getElementById('start-ai-quiz-btn').disabled = true;
+                    document.getElementById('start-ai-quiz-btn').classList.add('opacity-50', 'cursor-not-allowed');
+                } else {
+                    document.getElementById('quota-exhausted-alert').classList.add('hidden');
+                    document.getElementById('start-ai-quiz-btn').disabled = false;
+                    document.getElementById('start-ai-quiz-btn').classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+            }
+
+            renderMyAttendanceHistory();
+            renderLeaderboardTable();
+            if (isServantUnlocked) {
+                renderServantAttendanceTable();
+            }
+        }
+
+        // ==================== 3. تسجيل المخدوم لاسمه بنفسه ====================
+        window.saveMemberRegistration = async function(e) {
+            e.preventDefault();
+            if (!currentUser) return;
+            const fullName = document.getElementById('member-fullname-input').value.trim();
+            const grade = document.getElementById('member-grade-select').value;
+            if (!fullName) return;
+
+            if (!isFirebaseConfigured) {
+                const idx = allMembersList.findIndex(m => m.uid === currentUser.uid);
+                if (idx !== -1) {
+                    allMembersList[idx].fullName = fullName;
+                    allMembersList[idx].grade = grade;
+                    allMembersList[idx].isRegisteredBySelf = true;
+                    localStorage.setItem('church_fb_members', JSON.stringify(allMembersList));
+                    updateAllUIWithLatestData();
+                }
+                showToast("تم تسجيل اسمك بنجاح في كشف الكنيسة!", "success");
+                return;
+            }
+
+            const memberRef = doc(db, 'artifacts', appId, 'public', 'data', 'members', currentUser.uid);
+            await updateDoc(memberRef, {
+                fullName: fullName,
+                grade: grade,
+                isRegisteredBySelf: true
+            });
+            showToast("تم تسجيل اسمك بنجاح في كشف الكنيسة!", "success");
+        };
+
+        // عرض سجل حضور المخدوم الشخصي (للقراءة فقط)
+        function renderMyAttendanceHistory() {
+            const container = document.getElementById('my-attendance-history');
+            if (!currentUser) return;
+            const dates = Object.keys(attendanceByDate).sort().reverse();
+            const myRecords = [];
+
+            dates.forEach(date => {
+                const status = attendanceByDate[date]?.[currentUser.uid];
+                if (status === 'present' || status === 'absent') {
+                    myRecords.push({ date, status });
+                }
+            });
+
+            if (myRecords.length === 0) {
+                container.innerHTML = `<p class="text-xs text-gray-500 text-center py-4">لم يقم الخدام بتسجيل حضور أو غياب لك بعد.</p>`;
+                return;
+            }
+
+            container.innerHTML = myRecords.map(rec => `
+                <div class="flex items-center justify-between p-3 rounded-xl bg-church-cream border border-gray-200 text-xs font-bold">
+                    <span class="text-church-navy">${rec.date}</span>
+                    ${rec.status === 'present'
+                        ? `<span class="px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-800">✔ حاضر (+20 نقطة)</span>`
+                        : `<span class="px-2.5 py-1 rounded-lg bg-red-100 text-red-800">✘ غائب</span>`
+                    }
+                </div>
+            `).join('');
+        }
+
+        function renderAnnouncements() {
+            const list = document.getElementById('home-announcements-list');
+            if (!announcementsList || announcementsList.length === 0) {
+                list.innerHTML = `<p class="text-xs text-gray-500">لا توجد تنويهات حالياً.</p>`;
+                return;
+            }
+            list.innerHTML = announcementsList.map(a => `
+                <div class="p-3.5 rounded-2xl bg-church-cream border border-church-gold/25 text-xs font-bold text-church-navy leading-relaxed">
+                    <p>${a.text}</p>
+                    <span class="text-[10px] text-gray-400 block mt-1">${a.date || ''}</span>
+                </div>
+            `).join('');
+        }
+
+        // ==================== 4. بوابة الخدام (كلمة المرور + تغييرها + الحضور والغياب) ====================
+        window.handleServantAccess = function() {
+            if (isServantUnlocked) {
+                switchTab('servants');
+            } else {
+                document.getElementById('servant-password-modal').classList.remove('hidden');
+                document.getElementById('servant-modal-pass-input').value = '';
+                document.getElementById('servant-modal-pass-input').focus();
+            }
+        };
+
+        window.closeServantModal = function() {
+            document.getElementById('servant-password-modal').classList.add('hidden');
+        };
+
+        window.verifyServantPassword = function(e) {
+            e.preventDefault();
+            const entered = document.getElementById('servant-modal-pass-input').value.trim();
+            if (entered === storedServantPassword) {
+                isServantUnlocked = true;
+                closeServantModal();
+                document.getElementById('servant-nav-label').textContent = "بوابة الخدام (مفتوحة)";
+                document.getElementById('mobile-servant-nav-label').textContent = "بوابة الخدام (مفتوحة)";
+                showToast("تم الدخول إلى بوابة الخدام بنجاح.", "success");
+                switchTab('servants');
+            } else {
+                showToast("كلمة المرور غير صحيحة.", "error");
+            }
+        };
+
+        window.lockServantPortal = function() {
+            isServantUnlocked = false;
+            document.getElementById('servant-nav-label').textContent = "بوابة الخدام";
+            document.getElementById('mobile-servant-nav-label').textContent = "بوابة الخدام";
+            switchTab('profile');
+            showToast("تم قفل بوابة الخدام.", "info");
+        };
+
+        // تغيير كلمة مرور الخدام وحفظها في قاعدة البيانات
+        window.changeServantPassword = async function(e) {
+            e.preventDefault();
+            if (!isServantUnlocked) return;
+            const currentPass = document.getElementById('current-servant-pass').value.trim();
+            const newPass = document.getElementById('new-servant-pass').value.trim();
+
+            if (currentPass !== storedServantPassword) {
+                showToast("كلمة المرور الحالية غير صحيحة!", "error");
+                return;
+            }
+            if (newPass.length < 4) {
+                showToast("يجب أن تكون كلمة المرور الجديدة 4 أحرف أو أرقام على الأقل.", "error");
+                return;
+            }
+
+            storedServantPassword = newPass;
+            if (!isFirebaseConfigured) {
+                localStorage.setItem('church_fb_pass', newPass);
+            } else {
+                const settingsDoc = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'config');
+                await setDoc(settingsDoc, { servantPassword: newPass }, { merge: true });
+            }
+
+            document.getElementById('current-servant-pass').value = '';
+            document.getElementById('new-servant-pass').value = '';
+            showToast("تم تحديث كلمة مرور الخدام بنجاح!", "success");
+        };
+
+        window.publishAnnouncement = async function(e) {
+            e.preventDefault();
+            if (!isServantUnlocked) return;
+            const text = document.getElementById('announcement-input').value.trim();
+            if (!text) return;
+
+            const updated = [{ id: Date.now(), text, date: getTodayStr() }, ...announcementsList];
+            announcementsList = updated;
+            if (!isFirebaseConfigured) {
+                localStorage.setItem('church_fb_ann', JSON.stringify(updated));
+                renderAnnouncements();
+            } else {
+                const settingsDoc = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'config');
+                await setDoc(settingsDoc, { announcements: updated }, { merge: true });
+            }
+            document.getElementById('announcement-input').value = '';
+            showToast("تم نشر التنويه لجميع المخدومين!", "success");
+        };
+
+        // الخادم يحدد حاضر أو غائب للمخدومين
+        window.decideMemberAttendance = async function(memberUid, decision) {
+            if (!isServantUnlocked) return;
+            const selectedDate = document.getElementById('servant-date-input').value || getTodayStr();
+            const dayRecords = attendanceByDate[selectedDate] || {};
+            const previousDecision = dayRecords[memberUid];
+
+            if (previousDecision === decision) return;
+
+            const member = allMembersList.find(m => m.uid === memberUid);
+            if (!member) return;
+
+            let newAttPoints = member.attendancePoints || 0;
+            if (decision === 'present' && previousDecision !== 'present') {
+                newAttPoints += 20;
+            } else if (decision === 'absent' && previousDecision === 'present') {
+                newAttPoints = Math.max(0, newAttPoints - 20);
+            }
+
+            const updatedDayRecords = { ...dayRecords, [memberUid]: decision };
+
+            if (!isFirebaseConfigured) {
+                attendanceByDate[selectedDate] = updatedDayRecords;
+                member.attendancePoints = newAttPoints;
+                localStorage.setItem('church_fb_attendance', JSON.stringify(attendanceByDate));
+                localStorage.setItem('church_fb_members', JSON.stringify(allMembersList));
+                updateAllUIWithLatestData();
+                showToast(`تم تسجيل ${member.fullName}: ${decision === 'present' ? 'حاضر (+20 نقطة)' : 'غائب'}`, "success");
+                return;
+            }
+
+            const attDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'attendance', selectedDate);
+            const memberDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'members', memberUid);
+
+            await setDoc(attDocRef, { records: updatedDayRecords }, { merge: true });
+            await updateDoc(memberDocRef, { attendancePoints: newAttPoints });
+
+            showToast(`تم تسجيل ${member.fullName}: ${decision === 'present' ? 'حاضر (+20 نقطة)' : 'غائب'}`, "success");
+        };
+
+        window.markAllMembersPresent = async function() {
+            if (!isServantUnlocked) return;
+            const selectedDate = document.getElementById('servant-date-input').value || getTodayStr();
+            const dayRecords = { ...(attendanceByDate[selectedDate] || {}) };
+
+            for (const member of allMembersList) {
+                if (dayRecords[member.uid] !== 'present') {
+                    dayRecords[member.uid] = 'present';
+                    const newPts = (member.attendancePoints || 0) + 20;
+                    if (isFirebaseConfigured) {
+                        await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'members', member.uid), { attendancePoints: newPts });
+                    } else {
+                        member.attendancePoints = newPts;
+                    }
+                }
+            }
+
+            if (isFirebaseConfigured) {
+                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'attendance', selectedDate), { records: dayRecords }, { merge: true });
+            } else {
+                attendanceByDate[selectedDate] = dayRecords;
+                localStorage.setItem('church_fb_attendance', JSON.stringify(attendanceByDate));
+                localStorage.setItem('church_fb_members', JSON.stringify(allMembersList));
+                updateAllUIWithLatestData();
+            }
+            showToast("تم تحضير جميع المخدومين المسجلين وإضافة نقاط الحضور!", "success");
+        };
+
+        window.renderServantAttendanceTable = function() {
+            const tbody = document.getElementById('servant-members-tbody');
+            const selectedDate = document.getElementById('servant-date-input').value || getTodayStr();
+            const queryText = (document.getElementById('servant-search-input')?.value || '').trim().toLowerCase();
+            const dayRecords = attendanceByDate[selectedDate] || {};
+
+            const filtered = allMembersList.filter(m => (m.fullName || '').toLowerCase().includes(queryText));
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-gray-500">لا يوجد مخدومون مسجلون حالياً.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(m => {
+                const status = dayRecords[m.uid] || 'none';
+                const total = (m.attendancePoints || 0) + (m.quizPoints || 0);
+                return `
+                    <tr class="hover:bg-church-cream/60 transition">
+                        <td class="p-4">
+                            <div class="flex items-center gap-2.5">
+                                <img src="${m.photoURL || 'https://placehold.co/36x36/D4AF37/0F2537?text=M'}" onerror="this.src='https://placehold.co/36x36/D4AF37/0F2537?text=M'" class="w-8 h-8 rounded-full">
+                                <div>
+                                    <p class="font-extrabold text-church-navy">${m.fullName}</p>
+                                    <p class="text-[11px] text-gray-400">${m.email || ''}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="p-4"><span class="px-2.5 py-1 rounded-lg bg-gray-100 text-xs">${m.grade || 'ثانوي'}</span></td>
+                        <td class="p-4 text-center font-black text-church-goldDark">${total} نقطة</td>
+                        <td class="p-4">
+                            <div class="flex items-center justify-center gap-2">
+                                <button onclick="decideMemberAttendance('${m.uid}', 'present')" class="px-4 py-2 rounded-xl text-xs font-extrabold transition ${status === 'present' ? 'bg-emerald-600 text-white shadow-md' : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'}">
+                                    ✔ حاضر
+                                </button>
+                                <button onclick="decideMemberAttendance('${m.uid}', 'absent')" class="px-4 py-2 rounded-xl text-xs font-extrabold transition ${status === 'absent' ? 'bg-red-600 text-white shadow-md' : 'bg-red-50 text-red-700 hover:bg-red-100'}">
+                                    ✘ غائب
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        };
+
+        // ==================== 5. لوحة الشرف ====================
+        function renderLeaderboardTable() {
+            const tbody = document.getElementById('leaderboard-tbody');
+            const sorted = [...allMembersList].sort((a, b) => ((b.attendancePoints || 0) + (b.quizPoints || 0)) - ((a.attendancePoints || 0) + (a.quizPoints || 0)));
+
+            if (sorted.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-gray-500">لا يوجد متسابقون بعد.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = sorted.map((m, idx) => {
+                const total = (m.attendancePoints || 0) + (m.quizPoints || 0);
+                const isMe = m.uid === currentUser?.uid;
+                let medal = `<span class="w-7 h-7 rounded-full bg-gray-100 inline-flex items-center justify-center text-xs">${idx + 1}</span>`;
+                if (idx === 0) medal = `🥇`;
+                if (idx === 1) medal = `🥈`;
+                if (idx === 2) medal = `🥉`;
+
+                return `
+                    <tr class="${isMe ? 'bg-amber-50/80' : 'hover:bg-gray-50'}">
+                        <td class="p-4 text-lg">${medal}</td>
+                        <td class="p-4 font-extrabold text-church-navy">${m.fullName} ${isMe ? '<span class="text-[10px] bg-church-gold text-church-navy px-2 py-0.5 rounded-full mr-1">أنت</span>' : ''}</td>
+                        <td class="p-4 text-gray-600 text-xs">${m.grade || 'ثانوي'}</td>
+                        <td class="p-4 text-center text-emerald-700">${m.attendancePoints || 0}</td>
+                        <td class="p-4 text-center text-indigo-700">${m.quizPoints || 0}</td>
+                        <td class="p-4 text-center"><span class="px-3 py-1 rounded-xl bg-church-navy text-church-gold font-black">${total}</span></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // ==================== 6. مسابقات الذكاء الاصطناعي (50 سؤال يومياً + إضافة النقاط للحساب) ====================
+        async function callGeminiAPI(payload, retries = 3) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const res = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                    const data = await res.json();
+                    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (text) return text;
+                } catch (e) {
+                    if (i === retries - 1) throw e;
+                    await new Promise(r => setTimeout(r, 1000 * Math.pow(2, i)));
+                }
+            }
+        }
+
+        const backupBibleQuestions = [
+            { question: "من هو النبي الذي ابتلعه الحوت وبقي في جوفه ثلاثة أيام؟", options: ["يونان النبي", "إيليا النبي", "دانيال النبي", "حزقيال النبي"], correctAnswer: "يونان النبي", explanation: "سفر يونان 1: 17 - أعد الرب حوتاً عظيماً ليبتلع يونان." },
+            { question: "أين وُلد السيد المسيح له المجد؟", options: ["بيت لحم", "الناصرة", "أورشليم", "كفرناحوم"], correctAnswer: "بيت لحم", explanation: "إنجيل متى 2: 1 - وُلد يسوع في بيت لحم اليهودية." },
+            { question: "ما هي أول معجزة صنعها السيد المسيح؟", options: ["تحويل الماء إلى خمر في قانا الجليل", "إقامة لعازر", "تهدئة العاصفة", "إشباع الخمسة آلاف"], correctAnswer: "تحويل الماء إلى خمر في قانا الجليل", explanation: "يوحنا 2: 11 - هذه بداية الآيات فعلها يسوع في قانا الجليل." },
+            { question: "من هو كاروز الديار المصرية ومؤسس كنيسة الإسكندرية؟", options: ["مارمرقس الرسول", "القديس بطرس", "القديس بولس", "القديس يوحنا"], correctAnswer: "مارمرقس الرسول", explanation: "القديس مرقس الرسول بشّر بالمسيحية في مصر وأسس كنيسة الإسكندرية." },
+            { question: "كم يوماً صام السيد المسيح على الجبل؟", options: ["40 يوماً و40 ليلة", "7 أيام", "21 يوماً", "50 يوماً"], correctAnswer: "40 يوماً و40 ليلة", explanation: "متى 4: 2 - صام أربعين نهاراً وأربعين ليلة." }
+        ];
+
+        window.startAIQuizSession = async function() {
+            const me = getMyMemberRecord();
+            if (!me) return;
+
+            const solvedToday = me.dailyQuestionsCount || 0;
+            const remaining = Math.max(0, 50 - solvedToday);
+
+            if (remaining <= 0) {
+                showToast("لقد استنفدت الحد اليومي (50 سؤالاً). ننتظرك غداً!", "info");
+                return;
+            }
+
+            const requestedCount = parseInt(document.getElementById('quiz-batch-select').value);
+            const actualCount = Math.min(requestedCount, remaining);
+            const topic = document.getElementById('quiz-topic-select').value;
+
+            document.getElementById('quiz-setup-view').classList.add('hidden');
+            document.getElementById('quiz-result-view').classList.add('hidden');
+            document.getElementById('quiz-loading-view').classList.remove('hidden');
+            document.getElementById('quiz-loading-msg').textContent = `يقوم الذكاء الاصطناعي بتوليد ${actualCount} سؤالاً في "${topic}"...`;
+
+            try {
+                const batchSize = Math.min(actualCount, 25);
+                const prompt = `أنت خادم كنيسة ومعلم كتاب مقدس. قم بتوليد ${batchSize} سؤالاً مسيحياً باللغة العربية حول موضوع: "${topic}".
+                اجعل كل سؤال اختيار من متعدد (4 خيارات واضحة وإجابة واحدة صحيحة) مع شرح مبسط للآية أو المعلومة.`;
+
+                const payload = {
+                    contents: [{ parts: [{ text: prompt }] }],
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "ARRAY",
+                            items: {
+                                type: "OBJECT",
+                                properties: {
+                                    question: { type: "STRING" },
+                                    options: { type: "ARRAY", items: { type: "STRING" } },
+                                    correctAnswer: { type: "STRING" },
+                                    explanation: { type: "STRING" }
+                                },
+                                required: ["question", "options", "correctAnswer", "explanation"]
+                            }
+                        }
+                    }
+                };
+
+                const rawText = await callGeminiAPI(payload);
+                let generated = JSON.parse(rawText);
+
+                while (generated.length < actualCount) {
+                    const sample = backupBibleQuestions[generated.length % backupBibleQuestions.length];
+                    generated.push({ ...sample, question: `${sample.question} (${generated.length + 1})` });
+                }
+                activeQuizQuestions = generated.slice(0, actualCount);
+            } catch (err) {
+                // في حال عدم توفر الاتصال، نستخدم بنك الأسئلة الكتابي
+                activeQuizQuestions = Array.from({ length: actualCount }, (_, i) => {
+                    const base = backupBibleQuestions[i % backupBibleQuestions.length];
+                    return { ...base, question: i >= backupBibleQuestions.length ? `(${i + 1}) ${base.question}` : base.question };
+                });
+            }
+
+            renderActiveQuizQuestions();
+        };
+
+        function renderActiveQuizQuestions() {
+            document.getElementById('quiz-loading-view').classList.add('hidden');
+            document.getElementById('quiz-questions-view').classList.remove('hidden');
+            document.getElementById('active-quiz-count-label').textContent = `جولة من ${activeQuizQuestions.length} سؤالاً`;
+
+            const container = document.getElementById('quiz-items-container');
+            container.innerHTML = activeQuizQuestions.map((q, idx) => `
+                <div class="bg-white rounded-2xl p-5 border border-gray-200 shadow-sm space-y-3">
+                    <h4 class="text-base font-extrabold text-church-navy">
+                        <span class="bg-church-gold/25 text-church-navy px-2.5 py-0.5 rounded-lg ml-2 text-xs">س${idx + 1}</span>
+                        ${q.question}
+                    </h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+                        ${q.options.map(opt => `
+                            <label class="flex items-center gap-3 p-3 rounded-xl border border-gray-200 hover:border-church-gold hover:bg-church-cream/60 cursor-pointer transition">
+                                <input type="radio" name="q-opt-${idx}" value="${opt.replace(/"/g, '&quot;')}" class="w-4 h-4 accent-church-navy">
+                                <span class="text-sm font-bold text-gray-800">${opt}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.gradeQuizWithAI = async function() {
+            const me = getMyMemberRecord();
+            if (!me) return;
+
+            let correctCount = 0;
+            const results = activeQuizQuestions.map((q, idx) => {
+                const selected = document.querySelector(`input[name="q-opt-${idx}"]:checked`);
+                const userAnswer = selected ? selected.value : "";
+                const isCorrect = userAnswer.trim() === q.correctAnswer.trim();
+                if (isCorrect) correctCount++;
+                return { ...q, userAnswer, isCorrect };
+            });
+
+            const pointsEarned = correctCount * 10;
+            const today = getTodayStr();
+            const newDailyCount = Math.min(50, (me.dailyQuestionsCount || 0) + activeQuizQuestions.length);
+            const newQuizPoints = (me.quizPoints || 0) + pointsEarned;
+
+            // حفظ النقاط وعدد الأسئلة اليومية في حساب المخدوم
+            if (!isFirebaseConfigured) {
+                me.quizPoints = newQuizPoints;
+                me.dailyQuestionsCount = newDailyCount;
+                me.lastQuestionDate = today;
+                localStorage.setItem('church_fb_members', JSON.stringify(allMembersList));
+                updateAllUIWithLatestData();
+            } else {
+                const memberRef = doc(db, 'artifacts', appId, 'public', 'data', 'members', currentUser.uid);
+                await updateDoc(memberRef, {
+                    quizPoints: newQuizPoints,
+                    dailyQuestionsCount: newDailyCount,
+                    lastQuestionDate: today
+                });
+            }
+
+            // عرض النتيجة
+            document.getElementById('quiz-questions-view').classList.add('hidden');
+            document.getElementById('quiz-result-view').classList.remove('hidden');
+            document.getElementById('quiz-score-summary').textContent = `أجبت إجابة صحيحة على ${correctCount} من ${activeQuizQuestions.length} سؤالاً!`;
+            document.getElementById('quiz-points-awarded').textContent = `+${pointsEarned} نقطة`;
+            document.getElementById('quiz-ai-encouragement').textContent = correctCount >= activeQuizQuestions.length / 2
+                ? "أحسنت! معرفة كتابية رائعة، تم إضافة النقاط تلقائياً إلى حسابك في لوحة الشرف."
+                : "محاولة طيبة! راجع الشرح أسفل كل سؤال لتزداد معرفة في المرة القادمة.";
+
+            document.getElementById('quiz-review-list').innerHTML = results.map((r, i) => `
+                <div class="p-4 rounded-2xl border-2 ${r.isCorrect ? 'bg-emerald-50/70 border-emerald-300' : 'bg-red-50/70 border-red-200'} space-y-1.5 text-sm">
+                    <div class="flex items-center justify-between gap-2">
+                        <p class="font-extrabold text-church-navy">س${i + 1}: ${r.question}</p>
+                        <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold ${r.isCorrect ? 'bg-emerald-600 text-white' : 'bg-red-600 text-white'}">
+                            ${r.isCorrect ? '✔ صحيحة (+10)' : '✘ خطأ'}
+                        </span>
+                    </div>
+                    <p class="text-xs"><span class="font-bold">إجابتك:</span> ${r.userAnswer || 'لم تجب'}</p>
+                    ${!r.isCorrect ? `<p class="text-xs text-emerald-800 font-bold">الإجابة الصحيحة: ${r.correctAnswer}</p>` : ''}
+                    <p class="text-xs text-gray-700 bg-white/80 p-2 rounded-xl border border-gray-200 mt-1">💡 ${r.explanation}</p>
+                </div>
+            `).join('');
+
+            showToast(`تمت إضافة ${pointsEarned} نقطة إلى حسابك!`, "success");
+        };
+
+        window.cancelQuizSession = function() {
+            resetQuizViews();
+        };
+
+        window.resetQuizViews = function() {
+            document.getElementById('quiz-loading-view').classList.add('hidden');
+            document.getElementById('quiz-questions-view').classList.add('hidden');
+            document.getElementById('quiz-result-view').classList.add('hidden');
+            document.getElementById('quiz-setup-view').classList.remove('hidden');
+        };
+
+        // ==================== 7. التنقل بين التبويبات ====================
+        window.switchTab = function(tabName) {
+            if (tabName === 'servants' && !isServantUnlocked) {
+                handleServantAccess();
+                return;
+            }
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-church-gold', 'text-church-navy', 'shadow');
+                if (btn.id !== 'nav-servants') btn.classList.add('text-white');
+            });
+            const active = document.getElementById(`nav-${tabName}`);
+            if (active) {
+                active.classList.add('bg-church-gold', 'text-church-navy', 'shadow');
+                active.classList.remove('text-white');
+            }
+            lucide.createIcons();
+        };
+
+        window.toggleMobileMenu = function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        };
+
+        // بدء التشغيل
+        lucide.createIcons();
+        initAuth();
+    </script>
+</body>
+</html>
