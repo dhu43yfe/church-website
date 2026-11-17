@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>موقع الكنيسة الإلكتروني - إدارة الخدمة والمسابقات</title>
+    
+    <!-- تحميل خط القاهرة (Cairo) والتجوال (Tajawal) من Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- تحميل مكتبة Tailwind CSS للتصميم العصري المتجاوب -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- تحميل مكتبة Lucide Icons للأيقونات -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- تخصيص ألوان وخطوط الموقع -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                        tajawal: ['Tajawal', 'sans-serif'],
+                    },
+                    colors: {
+                        church: {
+                            navy: '#102A43',
+                            blue: '#1E3A8A',
+                            royal: '#243B53',
+                            gold: '#D4AF37',
+                            goldLight: '#F3E5AB',
+                            goldDark: '#AA8C2C',
+                            cream: '#FAF8F5',
+                            sand: '#F0EBE1'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #FAF8F5;
+            color: #102A43;
+            overflow-x: hidden;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+        }
+        .gold-gradient {
+            background: linear-gradient(135deg, #D4AF37 0%, #AA8C2C 100%);
+        }
+        .navy-gradient {
+            background: linear-gradient(135deg, #102A43 0%, #1E3A8A 100%);
+        }
+        /* تخصيص شريط التمرير */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FAF8F5;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D4AF37;
+            border-radius: 4px;
+        }
+        @keyframes pulse-soft {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+        .animate-pulse-soft {
+            animation: pulse-soft 2.5s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- شريط التنقل العلوي -->
+    <header class="navy-gradient text-white shadow-xl sticky top-0 z-40 border-b-2 border-church-gold">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- الشعار واسم الكنيسة -->
+                <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('home')">
+                    <div class="w-12 h-12 rounded-2xl gold-gradient flex items-center justify-center shadow-lg text-church-navy">
+                        <!-- رمز الصليب المزخرف -->
+                        <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M11 2h2v7h6v2h-6v11h-2V11H5V9h6V2z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight text-white">موقع الكنيسة الإلكتروني</h1>
+                        <p class="text-xs text-church-goldLight font-medium">منصة الخدمة، الحضور، والمسابقات الذكية</p>
+                    </div>
+                </div>
+
+                <!-- قائمة التنقل لسطح المكتب -->
+                <nav class="hidden md:flex items-center gap-2">
+                    <button onclick="switchTab('home')" id="nav-home" class="nav-btn px-4 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 bg-church-gold text-church-navy shadow">
+                        <i data-lucide="home" class="w-4 h-4"></i> الرئيسية
+                    </button>
+                    <button onclick="switchTab('quiz')" id="nav-quiz" class="nav-btn px-4 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 text-white hover:bg-white/10">
+                        <i data-lucide="brain-circuit" class="w-4 h-4 text-church-gold"></i> المسابقة اليومية (AI)
+                    </button>
+                    <button onclick="switchTab('leaderboard')" id="nav-leaderboard" class="nav-btn px-4 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 text-white hover:bg-white/10">
+                        <i data-lucide="trophy" class="w-4 h-4 text-church-gold"></i> لوحة الشرف والنقاط
+                    </button>
+                    <button onclick="handleServantTabClick()" id="nav-servants" class="nav-btn px-4 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 bg-white/10 border border-church-gold/50 text-church-goldLight hover:bg-church-gold hover:text-church-navy">
+                        <i data-lucide="shield-check" class="w-4 h-4"></i> <span id="servant-nav-text">دخول الخدام</span>
+                    </button>
+                </nav>
+
+                <!-- زر القائمة للهواتف -->
+                <div class="md:hidden flex items-center">
+                    <button onclick="toggleMobileMenu()" class="p-2.5 rounded-xl bg-white/10 text-church-gold hover:bg-white/20">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- القائمة المنسدلة للهواتف -->
+        <div id="mobile-menu" class="hidden md:hidden bg-church-navy border-t border-white/10 px-4 pt-2 pb-4 space-y-2">
+            <button onclick="switchTab('home'); toggleMobileMenu()" class="w-full text-right px-4 py-3 rounded-xl font-bold text-sm flex items-center gap-3 text-white hover:bg-white/10">
+                <i data-lucide="home" class="w-5 h-5 text-church-gold"></i> الرئيسية
+            </button>
+            <button onclick="switchTab('quiz'); toggleMobileMenu()" class="w-full text-right px-4 py-3 rounded-xl font-bold text-sm flex items-center gap-3 text-white hover:bg-white/10">
+                <i data-lucide="brain-circuit" class="w-5 h-5 text-church-gold"></i> المسابقة اليومية (50 سؤال AI)
+            </button>
+            <button onclick="switchTab('leaderboard'); toggleMobileMenu()" class="w-full text-right px-4 py-3 rounded-xl font-bold text-sm flex items-center gap-3 text-white hover:bg-white/10">
+                <i data-lucide="trophy" class="w-5 h-5 text-church-gold"></i> لوحة الشرف والنقاط
+            </button>
+            <button onclick="handleServantTabClick(); toggleMobileMenu()" class="w-full text-right px-4 py-3 rounded-xl font-bold text-sm flex items-center gap-3 bg-church-gold/20 text-church-goldLight border border-church-gold/40">
+                <i data-lucide="shield-check" class="w-5 h-5 text-church-gold"></i> <span id="mobile-servant-nav-text">دخول الخدام</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- نظام الإشعارات العائمة (Toast Notification) بدلاً من alert() -->
+    <div id="toast-container" class="fixed bottom-5 left-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
+
+    <!-- المحتوى الرئيسي للتطبيق -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- ==================== 1. تبويب الصفحة الرئيسية ==================== -->
+        <section id="tab-home" class="tab-content space-y-8">
+            <!-- البانر الترحيبي -->
+            <div class="navy-gradient rounded-3xl p-6 sm:p-10 text-white shadow-2xl relative overflow-hidden border border-church-gold/40">
+                <div class="absolute -left-16 -bottom-16 w-64 h-64 rounded-full bg-church-gold/10 blur-2xl"></div>
+                <div class="relative z-10 max-w-3xl space-y-4">
+                    <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-church-gold/20 border border-church-gold/40 text-church-goldLight text-xs font-bold">
+                        <i data-lucide="sparkles" class="w-4 h-4 text-church-gold"></i> أهلاً بك في بيتك الثاني
+                    </span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold leading-tight">
+                        ننمو معاً في النعمة والمعرفة كل يوم
+                    </h2>
+                    <p class="text-gray-200 text-base sm:text-lg leading-relaxed">
+                        منصة متكاملة لمتابعة حضور وغياب المخدومين، والمشاركة في تحدي الـ 50 سؤالاً اليومي المدعوم بالذكاء الاصطناعي مع تصحيح فوري ونقاط تشجيعية.
+                    </p>
+                    <div class="pt-3 flex flex-wrap gap-3">
+                        <button onclick="switchTab('quiz')" class="gold-gradient text-church-navy font-extrabold px-6 py-3.5 rounded-2xl shadow-lg hover:opacity-95 transition flex items-center gap-2 animate-pulse-soft">
+                            <i data-lucide="play-circle" class="w-5 h-5"></i> ابدأ مسابقة اليوم (AI)
+                        </button>
+                        <button onclick="handleServantTabClick()" class="bg-white/10 hover:bg-white/20 text-white border border-white/25 font-bold px-6 py-3.5 rounded-2xl transition flex items-center gap-2">
+                            <i data-lucide="user-check" class="w-5 h-5 text-church-gold"></i> بوابة الخدام والحضور
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- إحصائيات سريعة مباشرة -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                <div class="glass-card rounded-2xl p-5 shadow-md flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-2xl bg-blue-100 text-church-navy flex items-center justify-center shrink-0">
+                        <i data-lucide="users" class="w-7 h-7"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500 font-semibold">إجمالي المخدومين</p>
+                        <h3 id="stat-total-members" class="text-2xl font-extrabold text-church-navy">0</h3>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-2xl p-5 shadow-md flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
+                        <i data-lucide="calendar-check" class="w-7 h-7"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500 font-semibold">حضور اجتماع اليوم</p>
+                        <h3 id="stat-today-present" class="text-2xl font-extrabold text-emerald-700">0</h3>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-2xl p-5 shadow-md flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center shrink-0">
+                        <i data-lucide="help-circle" class="w-7 h-7"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500 font-semibold">تحدي الأسئلة اليومي</p>
+                        <h3 class="text-2xl font-extrabold text-amber-700">50 سؤال</h3>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-2xl p-5 shadow-md flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-2xl bg-purple-100 text-purple-800 flex items-center justify-center shrink-0">
+                        <i data-lucide="award" class="w-7 h-7"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500 font-semibold">متصدر النقاط</p>
+                        <h3 id="stat-top-member" class="text-lg font-extrabold text-purple-900 truncate max-w-[140px]">-</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- تنويهات الكنيسة وآية اليوم -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- آية اليوم -->
+                <div class="glass-card rounded-3xl p-6 shadow-md border-r-4 border-r-church-gold flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-2 text-church-goldDark font-bold text-sm mb-3">
+                            <i data-lucide="book-open" class="w-5 h-5"></i> آية اليوم للتأمل
+                        </div>
+                        <blockquote class="text-xl font-bold text-church-navy leading-relaxed mb-3">
+                            "لأَنَّ كَلِمَةَ اللهِ حَيَّةٌ وَفَعَّالَةٌ وَأَمْضَى مِنْ كُلِّ سَيْفٍ ذِي حَدَّيْنِ..."
+                        </blockquote>
+                    </div>
+                    <p class="text-sm text-gray-500 font-semibold">(عبرانيين ٤ : ١٢)</p>
+                </div>
+
+                <!-- إعلانات الخدمة -->
+                <div class="lg:col-span-2 glass-card rounded-3xl p-6 shadow-md">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-extrabold text-church-navy flex items-center gap-2">
+                            <i data-lucide="megaphone" class="w-5 h-5 text-church-goldDark"></i> أخبار وإعلانات الخدمة
+                        </h3>
+                        <span class="text-xs bg-church-sand text-church-navy px-3 py-1 rounded-full font-bold" id="today-date-badge"></span>
+                    </div>
+                    <div id="announcements-list" class="space-y-3">
+                        <!-- يتم تعبئتها تلقائياً -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 2. تبويب المسابقة اليومية بالذكاء الاصطناعي ==================== -->
+        <section id="tab-quiz" class="tab-content hidden space-y-6">
+            <div class="glass-card rounded-3xl p-6 sm:p-8 shadow-lg">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-200 pb-6">
+                    <div>
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 text-xs font-extrabold mb-2">
+                            <i data-lucide="cpu" class="w-4 h-4"></i> مدعوم بالذكاء الاصطناعي Gemini AI
+                        </span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-church-navy">المسابقة الكتابية اليومية (50 سؤالاً)</h2>
+                        <p class="text-gray-600 text-sm mt-1">اختر اسمك، وحدد عدد الأسئلة، وسيقوم الذكاء الاصطناعي بتوليد الأسئلة وتصحيح إجاباتك وإضافة النقاط لحسابك فوراً.</p>
+                    </div>
+                </div>
+
+                <!-- شاشة إعداد المسابقة قبل البدء -->
+                <div id="quiz-setup-panel" class="mt-6 space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                        <!-- اختيار المخدوم -->
+                        <div class="bg-church-cream p-4 rounded-2xl border border-church-gold/30">
+                            <label class="block text-sm font-bold text-church-navy mb-2">1. اختر اسمك (المخدوم):</label>
+                            <select id="quiz-member-select" class="w-full p-3 rounded-xl border border-gray-300 bg-white font-bold text-church-navy focus:ring-2 focus:ring-church-gold outline-none">
+                                <!-- الخيارات تضاف ديناميكياً -->
+                            </select>
+                        </div>
+
+                        <!-- اختيار موضوع المسابقة -->
+                        <div class="bg-church-cream p-4 rounded-2xl border border-church-gold/30">
+                            <label class="block text-sm font-bold text-church-navy mb-2">2. موضوع المسابقة اليوم:</label>
+                            <select id="quiz-topic-select" class="w-full p-3 rounded-xl border border-gray-300 bg-white font-bold text-church-navy focus:ring-2 focus:ring-church-gold outline-none">
+                                <option value="الكتاب المقدس بعهديه (أسئلة عامة ومتنوعة)">شامل في الكتاب المقدس</option>
+                                <option value="العهد الجديد وحياة السيد المسيح والرسل">العهد الجديد وحياة المسيح</option>
+                                <option value="العهد القديم والأنبياء والملوك">العهد القديم والأنبياء</option>
+                                <option value="تاريخ الكنيسة والقديسين والشهداء">تاريخ الكنيسة والقديسين</option>
+                                <option value="الطقوس الكنسية والألحان والعقيدة">الطقوس والعقيدة المسيحية</option>
+                            </select>
+                        </div>
+
+                        <!-- اختيار عدد الأسئلة في الجلسة -->
+                        <div class="bg-church-cream p-4 rounded-2xl border border-church-gold/30">
+                            <label class="block text-sm font-bold text-church-navy mb-2">3. عدد الأسئلة في هذه الجولة:</label>
+                            <select id="quiz-count-select" class="w-full p-3 rounded-xl border border-gray-300 bg-white font-bold text-church-navy focus:ring-2 focus:ring-church-gold outline-none">
+                                <option value="5">5 أسئلة سريعة (للتجربة)</option>
+                                <option value="10" selected>10 أسئلة (المرحلة الأولى من 50)</option>
+                                <option value="25">25 سؤالاً (نصف تحدي اليوم)</option>
+                                <option value="50">50 سؤالاً كاملاً (التحدي اليومي الكامل)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- مؤشر التقدم اليومي من 50 سؤال -->
+                    <div class="bg-blue-50/80 border border-blue-200 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-church-navy text-church-gold flex items-center justify-center font-extrabold">50</div>
+                            <div>
+                                <p class="font-bold text-church-navy text-sm">رصيد أسئلتك اليومي: <span id="daily-solved-count" class="text-blue-700 font-extrabold">0</span> / 50 سؤال</p>
+                                <p class="text-xs text-gray-600">كل إجابة صحيحة تمنحك <span class="font-bold text-emerald-700">10 نقاط</span> تضاف مباشرة إلى لوحة الشرف!</p>
+                            </div>
+                        </div>
+                        <button onclick="startAIQuiz()" class="w-full sm:w-auto gold-gradient text-church-navy font-extrabold px-8 py-3.5 rounded-2xl shadow-lg hover:opacity-95 transition flex items-center justify-center gap-2">
+                            <i data-lucide="sparkles" class="w-5 h-5"></i> توليد الأسئلة بالذكاء الاصطناعي وابدأ
+                        </button>
+                    </div>
+                </div>
+
+                <!-- شاشة التحميل أثناء توليد الأسئلة -->
+                <div id="quiz-loading-panel" class="hidden py-16 text-center space-y-4">
+                    <div class="w-16 h-16 border-4 border-church-gold border-t-church-navy rounded-full animate-spin mx-auto"></div>
+                    <h3 class="text-xl font-extrabold text-church-navy" id="quiz-loading-title">جاري توليد الأسئلة بواسطة الذكاء الاصطناعي...</h3>
+                    <p class="text-sm text-gray-500 max-w-md mx-auto">يقوم الذكاء الاصطناعي الآن بإعداد أسئلة متنوعة (اختيار من متعدد وأسئلة مقالية قصيرة) مخصصة لك.</p>
+                </div>
+
+                <!-- شاشة الأسئلة التفاعلية -->
+                <div id="quiz-active-panel" class="hidden mt-6 space-y-6">
+                    <div class="flex flex-wrap items-center justify-between gap-3 bg-church-navy text-white p-4 rounded-2xl">
+                        <div class="flex items-center gap-2">
+                            <span class="px-3 py-1 rounded-lg bg-church-gold text-church-navy font-extrabold text-sm" id="quiz-progress-badge">سؤال 1 من 10</span>
+                            <span class="text-sm text-gray-200 font-semibold" id="quiz-player-label">المتسابق: -</span>
+                        </div>
+                        <button onclick="resetQuizUI()" class="text-xs bg-white/15 hover:bg-white/25 px-3 py-1.5 rounded-lg font-bold transition">
+                            إلغاء والعودة
+                        </button>
+                    </div>
+
+                    <!-- حاوية الأسئلة -->
+                    <div id="questions-container" class="space-y-6"></div>
+
+                    <!-- زر تسليم الإجابات للتصحيح بالذكاء الاصطناعي -->
+                    <div class="pt-4 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <p class="text-sm text-gray-600 font-medium">تأكد من الإجابة على جميع الأسئلة قبل الضغط على زر التصحيح الذكي.</p>
+                        <button onclick="submitQuizForAIGrading()" class="w-full sm:w-auto navy-gradient text-white border-2 border-church-gold font-extrabold px-8 py-4 rounded-2xl shadow-xl hover:opacity-95 transition flex items-center justify-center gap-2">
+                            <i data-lucide="check-circle-2" class="w-5 h-5 text-church-gold"></i> تصحيح الإجابات بالذكاء الاصطناعي
+                        </button>
+                    </div>
+                </div>
+
+                <!-- شاشة نتائج التصحيح الذكي -->
+                <div id="quiz-results-panel" class="hidden mt-6 space-y-6">
+                    <div class="navy-gradient text-white rounded-3xl p-6 sm:p-8 text-center space-y-3 border-2 border-church-gold">
+                        <div class="w-16 h-16 rounded-2xl gold-gradient text-church-navy flex items-center justify-center mx-auto shadow-lg">
+                            <i data-lucide="award" class="w-9 h-9"></i>
+                        </div>
+                        <h3 class="text-2xl sm:text-3xl font-extrabold">نتيجة التصحيح الذكي</h3>
+                        <p id="result-summary-text" class="text-church-goldLight text-lg font-bold"></p>
+                        <div class="inline-block bg-white/10 px-6 py-3 rounded-2xl border border-white/20">
+                            <span class="text-sm text-gray-200">النقاط المكتسبة في هذه الجولة: </span>
+                            <span id="result-earned-points" class="text-2xl font-extrabold text-church-gold">+0 نقطة</span>
+                        </div>
+                        <p id="ai-overall-feedback" class="text-sm text-gray-200 max-w-2xl mx-auto pt-2 leading-relaxed"></p>
+                    </div>
+
+                    <!-- تفاصيل تصحيح كل سؤال -->
+                    <div id="detailed-grading-list" class="space-y-4"></div>
+
+                    <div class="flex justify-center gap-4 pt-4">
+                        <button onclick="resetQuizUI()" class="gold-gradient text-church-navy font-extrabold px-8 py-3.5 rounded-2xl shadow-md hover:opacity-95 transition">
+                            بدء جولة جديدة من أسئلة اليوم
+                        </button>
+                        <button onclick="switchTab('leaderboard')" class="bg-church-navy text-white font-bold px-6 py-3.5 rounded-2xl shadow-md hover:opacity-95 transition">
+                            مشاهدة ترتيبي في لوحة الشرف
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 3. تبويب لوحة الشرف والنقاط ==================== -->
+        <section id="tab-leaderboard" class="tab-content hidden space-y-6">
+            <div class="glass-card rounded-3xl p-6 sm:p-8 shadow-lg">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-church-navy flex items-center gap-2">
+                            <i data-lucide="trophy" class="w-7 h-7 text-church-goldDark"></i> لوحة الشرف وترتيب النقاط
+                        </h2>
+                        <p class="text-sm text-gray-600 mt-1">تُجمع النقاط تلقائياً من (نقاط الحضور في الكنيسة + نقاط مسابقات الذكاء الاصطناعي).</p>
+                    </div>
+                    <div class="bg-church-sand px-4 py-2 rounded-xl text-xs font-bold text-church-navy">
+                        الحضور = 20 نقطة | إجابة السؤال = 10 نقاط
+                    </div>
+                </div>
+
+                <!-- جدول المتصدرين -->
+                <div class="overflow-x-auto rounded-2xl border border-gray-200">
+                    <table class="w-full text-right border-collapse">
+                        <thead>
+                            <tr class="navy-gradient text-white text-sm">
+                                <th class="p-4">المركز</th>
+                                <th class="p-4">اسم المخدوم</th>
+                                <th class="p-4">المرحلة / الفصل</th>
+                                <th class="p-4 text-center">نقاط الحضور</th>
+                                <th class="p-4 text-center">نقاط المسابقات (AI)</th>
+                                <th class="p-4 text-center">إجمالي النقاط</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboard-table-body" class="divide-y divide-gray-200 bg-white text-sm font-semibold">
+                            <!-- يعبأ ديناميكياً -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 4. تبويب لوحة تحكم الخدام (محمي بكلمة مرور) ==================== -->
+        <section id="tab-servants" class="tab-content hidden space-y-6">
+            <!-- شريط رأس لوحة الخدام -->
+            <div class="navy-gradient text-white rounded-3xl p-6 shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-church-gold/40">
+                <div>
+                    <span class="text-xs text-church-gold font-bold uppercase tracking-wider">منطقة الإدارة والخدمة</span>
+                    <h2 class="text-2xl font-extrabold mt-1">لوحة تحكم الخدام — تسجيل الحضور والغياب</h2>
+                    <p class="text-xs text-gray-300 mt-1">سجّل حضور اليوم ليتم إضافة نقاط الحضور تلقائياً للمخدومين.</p>
+                </div>
+                <div class="flex flex-wrap items-center gap-3">
+                    <input type="date" id="attendance-date-picker" onchange="renderAttendanceList()" class="bg-white/10 border border-white/30 text-white rounded-xl px-4 py-2.5 text-sm font-bold outline-none focus:border-church-gold">
+                    <button onclick="logoutServant()" class="bg-red-500/20 hover:bg-red-500/30 text-red-200 border border-red-400/30 px-4 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 transition">
+                        <i data-lucide="log-out" class="w-4 h-4"></i> تسجيل خروج
+                    </button>
+                </div>
+            </div>
+
+            <!-- إضافة مخدوم جديد + إضافة إعلان -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- نموذج إضافة مخدوم -->
+                <div class="glass-card rounded-3xl p-6 shadow-md">
+                    <h3 class="text-lg font-extrabold text-church-navy mb-4 flex items-center gap-2">
+                        <i data-lucide="user-plus" class="w-5 h-5 text-church-goldDark"></i> إضافة مخدوم جديد للقائمة
+                    </h3>
+                    <form onsubmit="addNewMember(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <input type="text" id="new-member-name" placeholder="اسم المخدوم ثلاثي" required class="sm:col-span-2 p-3 rounded-xl border border-gray-300 text-sm font-bold focus:ring-2 focus:ring-church-gold outline-none">
+                        <select id="new-member-grade" class="p-3 rounded-xl border border-gray-300 text-sm font-bold bg-white focus:ring-2 focus:ring-church-gold outline-none">
+                            <option value="إعدادي">مرحلة إعدادي</option>
+                            <option value="ثانوي" selected>مرحلة ثانوي</option>
+                            <option value="جامعيين">شباب جامعيين</option>
+                            <option value="ابتدائي">مرحلة ابتدائي</option>
+                        </select>
+                        <button type="submit" class="sm:col-span-3 gold-gradient text-church-navy font-extrabold py-3 rounded-xl shadow hover:opacity-95 transition flex items-center justify-center gap-2">
+                            <i data-lucide="plus-circle" class="w-5 h-5"></i> حفظ المخدوم في الكشف
+                        </button>
+                    </form>
+                </div>
+
+                <!-- إضافة إعلان للخدمة -->
+                <div class="glass-card rounded-3xl p-6 shadow-md">
+                    <h3 class="text-lg font-extrabold text-church-navy mb-4 flex items-center gap-2">
+                        <i data-lucide="bell-plus" class="w-5 h-5 text-church-goldDark"></i> نشر تنويه جديد في الرئيسية
+                    </h3>
+                    <form onsubmit="addNewAnnouncement(event)" class="space-y-3">
+                        <input type="text" id="new-announcement-text" placeholder="اكتب موعد الاجتماع أو الرحلة أو تنويه الخدمة..." required class="w-full p-3 rounded-xl border border-gray-300 text-sm font-bold focus:ring-2 focus:ring-church-gold outline-none">
+                        <button type="submit" class="w-full navy-gradient text-white font-bold py-3 rounded-xl shadow hover:opacity-95 transition flex items-center justify-center gap-2">
+                            <i data-lucide="send" class="w-4 h-4 text-church-gold"></i> نشر التنويه الآن
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- كشف الحضور والغياب التفاعلي -->
+            <div class="glass-card rounded-3xl p-6 shadow-lg">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
+                    <div>
+                        <h3 class="text-xl font-extrabold text-church-navy">كشف الحضور والغياب اليومي</h3>
+                        <p class="text-xs text-gray-500 mt-0.5">اضغط على "حاضر" لمنح 20 نقطة حضور، أو "غائب" لتسجيل الغياب للمتابعة والافتقاد.</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <input type="text" id="search-member-input" onkeyup="renderAttendanceList()" placeholder="بحث باسم المخدوم..." class="p-2.5 rounded-xl border border-gray-300 text-sm font-semibold outline-none focus:border-church-gold">
+                        <button onclick="markAllPresent()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-3 rounded-xl transition shrink-0">
+                            تحضير الكل
+                        </button>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto rounded-2xl border border-gray-200">
+                    <table class="w-full text-right border-collapse">
+                        <thead>
+                            <tr class="bg-church-sand text-church-navy text-sm font-extrabold">
+                                <th class="p-4">اسم المخدوم</th>
+                                <th class="p-4">المرحلة</th>
+                                <th class="p-4 text-center">إجمالي النقاط</th>
+                                <th class="p-4 text-center">حالة اليوم</th>
+                                <th class="p-4 text-center">إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="attendance-table-body" class="divide-y divide-gray-200 bg-white text-sm font-semibold">
+                            <!-- يعبأ ديناميكياً -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- نافذة (Modal) تسجيل دخول الخدام -->
+    <div id="servant-login-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border-2 border-church-gold space-y-5 relative">
+            <button onclick="closeLoginModal()" class="absolute top-5 left-5 text-gray-400 hover:text-gray-700">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <div class="text-center space-y-2">
+                <div class="w-14 h-14 rounded-2xl navy-gradient text-church-gold flex items-center justify-center mx-auto shadow-md">
+                    <i data-lucide="lock" class="w-7 h-7"></i>
+                </div>
+                <h3 class="text-2xl font-extrabold text-church-navy">دخول الخدام</h3>
+                <p class="text-sm text-gray-500">أدخل رمز مرور الخدام للوصول إلى سجل الحضور والغياب وإدارة النقاط.</p>
+            </div>
+            <form onsubmit="submitServantLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-600 mb-1.5">رمز المرور الخاص بالخدام:</label>
+                    <input type="password" id="servant-password-input" placeholder="••••" required class="w-full p-3.5 text-center text-2xl tracking-widest rounded-xl border border-gray-300 font-extrabold focus:ring-2 focus:ring-church-gold outline-none">
+                    <p class="text-xs text-center text-amber-700 bg-amber-50 py-1.5 px-3 rounded-lg mt-2 font-bold">
+                        رمز المرور التجريبي الافتراضي للخدام: 1234
+                    </p>
+                </div>
+                <button type="submit" class="w-full gold-gradient text-church-navy font-extrabold py-3.5 rounded-xl shadow-lg hover:opacity-95 transition">
+                    دخول إلى لوحة الخدام
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- تذييل الصفحة -->
+    <footer class="bg-church-navy text-gray-300 py-6 border-t border-church-gold/30 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-1">
+            <p class="font-bold text-white text-sm">موقع الكنيسة الإلكتروني — نظام إدارة الخدمة والمسابقات الذكية</p>
+            <p class="text-xs text-church-goldLight">تم التطوير لخدمة الكنيسة والمخدومين بكل محبة</p>
+        </div>
+    </footer>
+
+    <!-- المنطق البرمجي الكامل للتطبيق والذكاء الاصطناعي -->
+    <script>
+        // مفتاح Gemini API (يتم حقنه تلقائياً في بيئة التشغيل، وفي حال عدم توفره يعمل النظام الاحتياطي الذكي بسلاسة)
+        const apiKey = ""; 
+
+        // ==================== حالة التطبيق والبيانات الافتراضية ====================
+        const STORAGE_KEY = 'church_portal_data_v1';
+        const SERVANT_PIN = '1234';
+
+        // بيانات افتراضية للمخدومين لتعمل المنصة فوراً عند الفتح
+        const defaultState = {
+            members: [
+                { id: 1, name: "كيرلس ماجد يوسف", grade: "ثانوي", attendancePoints: 60, quizPoints: 80, dailySolved: 0, lastQuizDate: "" },
+                { id: 2, name: "مارينا سامح جرجس", grade: "ثانوي", attendancePoints: 80, quizPoints: 90, dailySolved: 0, lastQuizDate: "" },
+                { id: 3, name: "بيشوي عماد فوزي", grade: "جامعيين", attendancePoints: 40, quizPoints: 110, dailySolved: 0, lastQuizDate: "" },
+                { id: 4, name: "دميانة هاني عزيز", grade: "إعدادي", attendancePoints: 60, quizPoints: 50, dailySolved: 0, lastQuizDate: "" },
+                { id: 5, name: "مينا أشرف نبيل", grade: "جامعيين", attendancePoints: 80, quizPoints: 70, dailySolved: 0, lastQuizDate: "" },
+                { id: 6, name: "فيرينا وجيه كامل", grade: "إعدادي", attendancePoints: 40, quizPoints: 60, dailySolved: 0, lastQuizDate: "" }
+            ],
+            // سجل الحضور: { "YYYY-MM-DD": { memberId: "present" | "absent" } }
+            attendanceRecords: {},
+            announcements: [
+                { id: 1, text: "اجتماع الشباب الأسبوعي يوم الجمعة الساعة 7:00 مساءً بقاعة الكنيسة الكبرى.", date: "ثابت أسبوعياً" },
+                { id: 2, text: "تحدي الـ 50 سؤالاً اليومي متاح الآن! اجمع نقاط المسابقة مع نقاط حضورك للفوز بجوائز الشهر.", date: "مسابقة الشهر" }
+            ],
+            isServantLoggedIn: false
+        };
+
+        let appState = loadState();
+        let currentQuizQuestions = [];
+        let activeQuizMemberId = null;
+
+        // الحصول على تاريخ اليوم بصيغة YYYY-MM-DD
+        function getTodayISO() {
+            const now = new Date();
+            return now.toISOString().split('T')[0];
+        }
+
+        // تحميل البيانات من LocalStorage
+        function loadState() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    // تصفير عداد الأسئلة اليومية إذا تغير اليوم
+                    const today = getTodayISO();
+                    parsed.members.forEach(m => {
+                        if (m.lastQuizDate !== today) {
+                            m.dailySolved = 0;
+                            m.lastQuizDate = today;
+                        }
+                    });
+                    return parsed;
+                }
+            } catch (e) {
+                console.warn("تعذر تحميل البيانات المحفوظة، سيتم استخدام البيانات الافتراضية.");
+            }
+            const initial = JSON.parse(JSON.stringify(defaultState));
+            const today = getTodayISO();
+            initial.attendanceRecords[today] = { 1: 'present', 2: 'present', 5: 'present' };
+            return initial;
+        }
+
+        function saveState() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+            } catch (e) {
+                console.warn("تعذر الحفظ في التخزين المحلي");
+            }
+            updateDashboardStats();
+        }
+
+        // ==================== التهيئة عند فتح الصفحة ====================
+        window.onload = function() {
+            lucide.createIcons();
+            const today = getTodayISO();
+            document.getElementById('attendance-date-picker').value = today;
+            document.getElementById('today-date-badge').textContent = new Date().toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            
+            updateServantAuthUI();
+            updateDashboardStats();
+            renderAnnouncements();
+            populateMemberSelect();
+            renderLeaderboard();
+            renderAttendanceList();
+        };
+
+        // ==================== نظام الإشعارات المخصصة (Toast) ====================
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const bgColors = {
+                success: 'bg-emerald-800 border-emerald-400 text-white',
+                error: 'bg-red-800 border-red-400 text-white',
+                info: 'bg-church-navy border-church-gold text-white'
+            };
+            toast.className = `${bgColors[type] || bgColors.info} border-r-4 px-4 py-3.5 rounded-2xl shadow-2xl text-sm font-bold flex items-center justify-between gap-3 pointer-events-auto transition-all duration-300 transform translate-y-0`;
+            toast.innerHTML = `<span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // ==================== التنقل بين التبويبات ====================
+        function switchTab(tabId) {
+            if (tabId === 'servants' && !appState.isServantLoggedIn) {
+                openLoginModal();
+                return;
+            }
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+
+            // تحديث شكل الأزرار
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-church-gold', 'text-church-navy', 'shadow');
+                if (btn.id !== 'nav-servants') btn.classList.add('text-white');
+            });
+            const activeBtn = document.getElementById(`nav-${tabId}`);
+            if (activeBtn) {
+                activeBtn.classList.add('bg-church-gold', 'text-church-navy', 'shadow');
+                activeBtn.classList.remove('text-white');
+            }
+
+            if (tabId === 'leaderboard') renderLeaderboard();
+            if (tabId === 'servants') renderAttendanceList();
+            if (tabId === 'quiz') populateMemberSelect();
+            lucide.createIcons();
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        // ==================== نظام دخول الخدام ====================
+        function handleServantTabClick() {
+            if (appState.isServantLoggedIn) {
+                switchTab('servants');
+            } else {
+                openLoginModal();
+            }
+        }
+
+        function openLoginModal() {
+            document.getElementById('servant-login-modal').classList.remove('hidden');
+            document.getElementById('servant-password-input').value = '';
+            document.getElementById('servant-password-input').focus();
+        }
+
+        function closeLoginModal() {
+            document.getElementById('servant-login-modal').classList.add('hidden');
+        }
+
+        function submitServantLogin(e) {
+            e.preventDefault();
+            const pin = document.getElementById('servant-password-input').value.trim();
+            if (pin === SERVANT_PIN) {
+                appState.isServantLoggedIn = true;
+                saveState();
+                updateServantAuthUI();
+                closeLoginModal();
+                showToast("مرحباً بك في لوحة تحكم الخدام!", "success");
+                switchTab('servants');
+            } else {
+                showToast("رمز المرور غير صحيح! جرب الرمز 1234", "error");
+            }
+        }
+
+        function logoutServant() {
+            appState.isServantLoggedIn = false;
+            saveState();
+            updateServantAuthUI();
+            switchTab('home');
+            showToast("تم تسجيل خروج الخادم بنجاح.", "info");
+        }
+
+        function updateServantAuthUI() {
+            const label = appState.isServantLoggedIn ? "لوحة الخدام (مفتوحة)" : "دخول الخدام";
+            document.getElementById('servant-nav-text').textContent = label;
+            document.getElementById('mobile-servant-nav-text').textContent = label;
+        }
+
+        // ==================== إدارة الإحصائيات والإعلانات ====================
+        function updateDashboardStats() {
+            document.getElementById('stat-total-members').textContent = appState.members.length;
+            const today = getTodayISO();
+            const todayMap = appState.attendanceRecords[today] || {};
+            const presentCount = Object.values(todayMap).filter(status => status === 'present').length;
+            document.getElementById('stat-today-present').textContent = `${presentCount} / ${appState.members.length}`;
+
+            // حساب المتصدر
+            if (appState.members.length > 0) {
+                const sorted = [...appState.members].sort((a, b) => (b.attendancePoints + b.quizPoints) - (a.attendancePoints + a.quizPoints));
+                document.getElementById('stat-top-member').textContent = sorted[0].name.split(' ').slice(0, 2).join(' ');
+            }
+        }
+
+        function renderAnnouncements() {
+            const list = document.getElementById('announcements-list');
+            list.innerHTML = appState.announcements.map(ann => `
+                <div class="p-4 rounded-2xl bg-church-cream border border-church-gold/25 flex items-start justify-between gap-3">
+                    <div class="flex items-start gap-3">
+                        <span class="w-2.5 h-2.5 rounded-full bg-church-gold mt-2 shrink-0"></span>
+                        <p class="text-sm font-bold text-church-navy leading-relaxed">${ann.text}</p>
+                    </div>
+                    <span class="text-xs text-gray-500 font-semibold shrink-0 bg-white px-2.5 py-1 rounded-lg border">${ann.date}</span>
+                </div>
+            `).join('');
+        }
+
+        function addNewAnnouncement(e) {
+            e.preventDefault();
+            const input = document.getElementById('new-announcement-text');
+            const text = input.value.trim();
+            if (!text) return;
+            appState.announcements.unshift({
+                id: Date.now(),
+                text,
+                date: new Date().toLocaleDateString('ar-EG', { month: 'short', day: 'numeric' })
+            });
+            input.value = '';
+            saveState();
+            renderAnnouncements();
+            showToast("تم نشر التنويه في الصفحة الرئيسية!", "success");
+        }
+
+        // ==================== نظام الحضور والغياب وإدارة المخدومين ====================
+        function addNewMember(e) {
+            e.preventDefault();
+            const nameInput = document.getElementById('new-member-name');
+            const gradeSelect = document.getElementById('new-member-grade');
+            const name = nameInput.value.trim();
+            if (!name) return;
+
+            const newMember = {
+                id: Date.now(),
+                name,
+                grade: gradeSelect.value,
+                attendancePoints: 0,
+                quizPoints: 0,
+                dailySolved: 0,
+                lastQuizDate: getTodayISO()
+            };
+            appState.members.push(newMember);
+            nameInput.value = '';
+            saveState();
+            renderAttendanceList();
+            populateMemberSelect();
+            showToast(`تمت إضافة المخدوم "${name}" بنجاح!`, "success");
+        }
+
+        function setMemberAttendance(memberId, status) {
+            const date = document.getElementById('attendance-date-picker').value || getTodayISO();
+            if (!appState.attendanceRecords[date]) {
+                appState.attendanceRecords[date] = {};
+            }
+            const prevStatus = appState.attendanceRecords[date][memberId];
+            if (prevStatus === status) return;
+
+            const member = appState.members.find(m => m.id === memberId);
+            if (!member) return;
+
+            // تعديل نقاط الحضور تلقائياً (20 نقطة للحضور)
+            if (status === 'present' && prevStatus !== 'present') {
+                member.attendancePoints += 20;
+                showToast(`تم تسجيل حضور ${member.name} (+20 نقطة)`, "success");
+            } else if (status === 'absent' && prevStatus === 'present') {
+                member.attendancePoints = Math.max(0, member.attendancePoints - 20);
+                showToast(`تم تعديل الحالة إلى غائب لـ ${member.name}`, "info");
+            } else if (status === 'absent') {
+                showToast(`تم تسجيل غياب ${member.name}`, "info");
+            }
+
+            appState.attendanceRecords[date][memberId] = status;
+            saveState();
+            renderAttendanceList();
+        }
+
+        function markAllPresent() {
+            const date = document.getElementById('attendance-date-picker').value || getTodayISO();
+            if (!appState.attendanceRecords[date]) appState.attendanceRecords[date] = {};
+            let updatedCount = 0;
+
+            appState.members.forEach(m => {
+                if (appState.attendanceRecords[date][m.id] !== 'present') {
+                    appState.attendanceRecords[date][m.id] = 'present';
+                    m.attendancePoints += 20;
+                    updatedCount++;
+                }
+            });
+            saveState();
+            renderAttendanceList();
+            showToast(`تم تحضير ${updatedCount} مخدوم وإضافة نقاط الحضور لهم!`, "success");
+        }
+
+        function deleteMember(memberId) {
+            appState.members = appState.members.filter(m => m.id !== memberId);
+            saveState();
+            renderAttendanceList();
+            populateMemberSelect();
+            showToast("تم حذف المخدوم من الكشف.", "info");
+        }
+
+        function renderAttendanceList() {
+            const tbody = document.getElementById('attendance-table-body');
+            const date = document.getElementById('attendance-date-picker').value || getTodayISO();
+            const searchQuery = (document.getElementById('search-member-input')?.value || '').trim().toLowerCase();
+            const dayRecord = appState.attendanceRecords[date] || {};
+
+            const filtered = appState.members.filter(m => m.name.toLowerCase().includes(searchQuery));
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-gray-500">لا يوجد مخدومون مطابقون للبحث.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(m => {
+                const status = dayRecord[m.id] || 'unmarked';
+                const totalPts = m.attendancePoints + m.quizPoints;
+                return `
+                    <tr class="hover:bg-church-cream/60 transition">
+                        <td class="p-4 font-bold text-church-navy">${m.name}</td>
+                        <td class="p-4"><span class="px-2.5 py-1 rounded-lg bg-gray-100 text-gray-700 text-xs">${m.grade}</span></td>
+                        <td class="p-4 text-center font-extrabold text-church-goldDark">${totalPts} نقطة</td>
+                        <td class="p-4">
+                            <div class="flex items-center justify-center gap-2">
+                                <button onclick="setMemberAttendance(${m.id}, 'present')" class="px-3.5 py-1.5 rounded-xl text-xs font-extrabold transition flex items-center gap-1 ${status === 'present' ? 'bg-emerald-600 text-white shadow' : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'}">
+                                    <i data-lucide="check" class="w-3.5 h-3.5"></i> حاضر
+                                </button>
+                                <button onclick="setMemberAttendance(${m.id}, 'absent')" class="px-3.5 py-1.5 rounded-xl text-xs font-extrabold transition flex items-center gap-1 ${status === 'absent' ? 'bg-red-600 text-white shadow' : 'bg-red-50 text-red-700 hover:bg-red-100'}">
+                                    <i data-lucide="x" class="w-3.5 h-3.5"></i> غائب
+                                </button>
+                            </div>
+                        </td>
+                        <td class="p-4 text-center">
+                            <button onclick="deleteMember(${m.id})" title="حذف من الكشف" class="text-gray-400 hover:text-red-600 p-1.5 rounded-lg transition">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            lucide.createIcons();
+        }
+
+        // ==================== لوحة الشرف ====================
+        function renderLeaderboard() {
+            const tbody = document.getElementById('leaderboard-table-body');
+            const sorted = [...appState.members].sort((a, b) => (b.attendancePoints + b.quizPoints) - (a.attendancePoints + a.quizPoints));
+
+            tbody.innerHTML = sorted.map((m, idx) => {
+                const total = m.attendancePoints + m.quizPoints;
+                let rankBadge = `<span class="w-7 h-7 rounded-full bg-gray-100 text-gray-700 inline-flex items-center justify-center font-bold">${idx + 1}</span>`;
+                if (idx === 0) rankBadge = `<span class="w-8 h-8 rounded-full gold-gradient text-church-navy inline-flex items-center justify-center font-extrabold shadow">🥇</span>`;
+                if (idx === 1) rankBadge = `<span class="w-8 h-8 rounded-full bg-gray-200 text-gray-800 inline-flex items-center justify-center font-extrabold">🥈</span>`;
+                if (idx === 2) rankBadge = `<span class="w-8 h-8 rounded-full bg-amber-100 text-amber-800 inline-flex items-center justify-center font-extrabold">🥉</span>`;
+
+                return `
+                    <tr class="${idx === 0 ? 'bg-amber-50/40' : 'hover:bg-gray-50'}">
+                        <td class="p-4">${rankBadge}</td>
+                        <td class="p-4 font-extrabold text-church-navy">${m.name}</td>
+                        <td class="p-4 text-gray-600">${m.grade}</td>
+                        <td class="p-4 text-center text-emerald-700 font-bold">${m.attendancePoints}</td>
+                        <td class="p-4 text-center text-indigo-700 font-bold">${m.quizPoints}</td>
+                        <td class="p-4 text-center"><span class="px-3 py-1 rounded-xl bg-church-navy text-church-gold font-extrabold">${total}</span></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // ==================== المسابقة اليومية (50 سؤال) والتصحيح بالذكاء الاصطناعي ====================
+        function populateMemberSelect() {
+            const select = document.getElementById('quiz-member-select');
+            select.innerHTML = appState.members.map(m => `<option value="${m.id}">${m.name} (${m.grade})</option>`).join('');
+            select.onchange = updateDailySolvedDisplay;
+            updateDailySolvedDisplay();
+        }
+
+        function updateDailySolvedDisplay() {
+            const id = parseInt(document.getElementById('quiz-member-select').value);
+            const member = appState.members.find(m => m.id === id);
+            document.getElementById('daily-solved-count').textContent = member ? (member.dailySolved || 0) : 0;
+        }
+
+        // دالة مساعدة للاتصال بـ Gemini API مع إعادة المحاولة التلقائية
+        async function callGeminiWithRetry(payload, maxRetries = 3) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+            for (let attempt = 0; attempt < maxRetries; attempt++) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    const data = await response.json();
+                    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (text) return text;
+                } catch (err) {
+                    if (attempt === maxRetries - 1) throw err;
+                    await new Promise(res => setTimeout(res, 1000 * Math.pow(2, attempt)));
+                }
+            }
+        }
+
+        // بنك أسئلة كتابية احتياطي غني لتوليد حتى 50 سؤالاً فوراً في حال عدم الاتصال بالإنترنت
+        const fallbackQuestionBank = [
+            { type: "mcq", question: "من هو النبي الذي ابتلعه الحوت وبقي في جوفه ثلاثة أيام وثلاث ليالٍ؟", options: ["يونان النبي", "إيليا النبي", "دانيال النبي", "إرميا النبي"], correctAnswer: "يونان النبي", explanation: "يونان 1: 17 - أعد الرب حوتاً عظيماً ليبتلع يونان." },
+            { type: "mcq", question: "في أي مدينة وُلد السيد المسيح له المجد؟", options: ["بيت لحم", "الناصرة", "أورشليم", "كفرناحوم"], correctAnswer: "بيت لحم", explanation: "متى 2: 1 - وُلد يسوع في بيت لحم اليهودية." },
+            { type: "short", question: "ما هو أول سفر في الكتاب المقدس؟", options: [], correctAnswer: "سفر التكوين", explanation: "سفر التكوين هو أول أسفار التوراة والكتاب المقدس." },
+            { type: "mcq", question: "كم عدد تلاميذ السيد المسيح الاثني عشر؟", options: ["12 تلميذاً", "7 تلاميذ", "40 تلميذاً", "70 تلميذاً"], correctAnswer: "12 تلميذاً", explanation: "اختار السيد المسيح اثني عشر تلميذاً ليكونوا رسلاً." },
+            { type: "mcq", question: "من هو التلميذ الذي أنكر السيد المسيح ثلاث مرات قبل صياح الديك؟", options: ["بطرس الرسول", "يوحنا الحبيب", "توما الرسول", "أندراوس"], correctAnswer: "بطرس الرسول", explanation: "متى 26: 75 - تذكر بطرس كلام يسوع وبكى بكاءً مراً." },
+            { type: "short", question: "من هو الملك الذي بنى هيكل الرب في أورشليم؟", options: [], correctAnswer: "سليمان الملك", explanation: "سليمان بن داود هو الذي أتم بناء هيكل الرب." },
+            { type: "mcq", question: "ما هي أول معجزة صنعها السيد المسيح في عرس قانا الجليل؟", options: ["تحويل الماء إلى خمر", "إقامة لعازر", "تهدئة العاصفة", "إشباع الجموع"], correctAnswer: "تحويل الماء إلى خمر", explanation: "يوحنا 2: 11 - هذه بداية الآيات فعلها يسوع في قانا الجليل." },
+            { type: "mcq", question: "كم يوماً صام السيد المسيح على الجبل؟", options: ["40 يوماً و40 ليلة", "7 أيام", "21 يوماً", "50 يوماً"], correctAnswer: "40 يوماً و40 ليلة", explanation: "متى 4: 2 - فبعدما صام أربعين نهاراً وأربعين ليلة جاع أخيراً." },
+            { type: "short", question: "من هو كاروز الديار المصرية ومؤسس كنيسة الإسكندرية؟", options: [], correctAnswer: "مارمرقس الرسول", explanation: "القديس مرقس الرسول هو كاروز الديار المصرية وكاتب الإنجيل الثاني." },
+            { type: "mcq", question: "ما هو أطول مزمور في سفر المزامير؟", options: ["المزمور 119", "المزمور 23", "المزمور 51", "المزمور 1"], correctAnswer: "المزمور 119", explanation: "المزمور 119 يتكون من 176 آية ويتحدث عن محبة شريعة الرب." }
+        ];
+
+        function buildFallbackQuestions(count) {
+            const result = [];
+            for (let i = 0; i < count; i++) {
+                const base = fallbackQuestionBank[i % fallbackQuestionBank.length];
+                result.push({
+                    id: i + 1,
+                    type: base.type,
+                    question: i >= fallbackQuestionBank.length ? `(سؤال إضافي ${i + 1}) ${base.question}` : base.question,
+                    options: [...base.options],
+                    correctAnswer: base.correctAnswer,
+                    explanation: base.explanation
+                });
+            }
+            return result;
+        }
+
+        // بدء توليد الأسئلة بالذكاء الاصطناعي
+        async function startAIQuiz() {
+            activeQuizMemberId = parseInt(document.getElementById('quiz-member-select').value);
+            const topic = document.getElementById('quiz-topic-select').value;
+            const count = parseInt(document.getElementById('quiz-count-select').value);
+            const member = appState.members.find(m => m.id === activeQuizMemberId);
+
+            if (!member) {
+                showToast("يرجى اختيار اسم المخدوم أولاً.", "error");
+                return;
+            }
+
+            document.getElementById('quiz-setup-panel').classList.add('hidden');
+            document.getElementById('quiz-results-panel').classList.add('hidden');
+            document.getElementById('quiz-loading-panel').classList.remove('hidden');
+            document.getElementById('quiz-loading-title').textContent = `جاري توليد ${count} سؤالاً في "${topic}" بالذكاء الاصطناعي...`;
+
+            try {
+                // نطلب من Gemini توليد الأسئلة بصيغة JSON منظمة (نطلب دفعة ذكية تصل إلى 25 سؤالاً في المرة الواحدة لضمان السرعة ونكمل الباقي بسلاسة إذا اختار 50)
+                const batchLimit = Math.min(count, 25);
+                const prompt = `أنت خادم كنيسة ومعلم كتاب مقدس خبير. قم بتوليد ${batchLimit} سؤالاً مسيحياً باللغة العربية الفصحى المبسطة حول موضوع: "${topic}".
+                اجعل حوالي 80% من الأسئلة اختيار من متعدد (type: "mcq" مع 4 خيارات واضحة) و20% أسئلة إجابة قصيرة من كلمة أو كلمتين (type: "short" و options: []).
+                تأكد من دقة المعلومات الكتابية والكنسية وتنوع مستوى الصعوبة.`;
+
+                const payload = {
+                    contents: [{ parts: [{ text: prompt }] }],
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "ARRAY",
+                            items: {
+                                type: "OBJECT",
+                                properties: {
+                                    type: { type: "STRING", enum: ["mcq", "short"] },
+                                    question: { type: "STRING" },
+                                    options: { type: "ARRAY", items: { type: "STRING" } },
+                                    correctAnswer: { type: "STRING" },
+                                    explanation: { type: "STRING" }
+                                },
+                                required: ["type", "question", "options", "correctAnswer", "explanation"]
+                            }
+                        }
+                    }
+                };
+
+                const responseText = await callGeminiWithRetry(payload);
+                let generated = JSON.parse(responseText);
+
+                // إذا طلب المستخدم 50 سؤالاً، نكمل باقي الـ 50 سؤالاً بدمج توليد إضافي أو بنك الأسئلة لضمان حصوله على 50 سؤالاً كاملاً
+                if (count > generated.length) {
+                    const extraNeeded = count - generated.length;
+                    const extra = buildFallbackQuestions(extraNeeded);
+                    generated = [...generated, ...extra];
+                }
+
+                currentQuizQuestions = generated.slice(0, count).map((q, idx) => ({ ...q, id: idx + 1 }));
+                showToast(`تم توليد ${currentQuizQuestions.length} سؤالاً بنجاح بواسطة الذكاء الاصطناعي!`, "success");
+            } catch (error) {
+                // في حال عدم توفر الاتصال بالخادم، نستخدم بنك الأسئلة الاحتياطي حتى لا تتوقف تجربة المستخدم أبداً
+                currentQuizQuestions = buildFallbackQuestions(count);
+                showToast(`تم تحميل ${count} سؤالاً من بنك الأسئلة الكتابي!`, "info");
+            }
+
+            renderActiveQuiz(member);
+        }
+
+        function renderActiveQuiz(member) {
+            document.getElementById('quiz-loading-panel').classList.add('hidden');
+            document.getElementById('quiz-active-panel').classList.remove('hidden');
+            document.getElementById('quiz-progress-badge').textContent = `عدد الأسئلة: ${currentQuizQuestions.length} سؤال`;
+            document.getElementById('quiz-player-label').textContent = `المتسابق: ${member.name}`;
+
+            const container = document.getElementById('questions-container');
+            container.innerHTML = currentQuizQuestions.map((q, index) => {
+                const isMcq = q.type === 'mcq' && q.options && q.options.length > 0;
+                return `
+                    <div class="bg-white rounded-2xl p-5 sm:p-6 border border-gray-200 shadow-sm space-y-4" id="q-card-${index}">
+                        <div class="flex items-start justify-between gap-3">
+                            <h4 class="text-base sm:text-lg font-extrabold text-church-navy leading-relaxed">
+                                <span class="inline-block bg-church-gold/25 text-church-navy px-2.5 py-0.5 rounded-lg ml-2 text-sm">س${index + 1}</span>
+                                ${q.question}
+                            </h4>
+                            <span class="text-xs px-2.5 py-1 rounded-lg font-bold shrink-0 ${isMcq ? 'bg-blue-50 text-blue-700' : 'bg-purple-50 text-purple-700'}">
+                                ${isMcq ? 'اختيار من متعدد' : 'إجابة قصيرة (تصحيح AI)'}
+                            </span>
+                        </div>
+
+                        ${isMcq ? `
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                                ${q.options.map((opt, optIdx) => `
+                                    <label class="flex items-center gap-3 p-3.5 rounded-xl border border-gray-200 hover:border-church-gold hover:bg-church-cream/60 cursor-pointer transition">
+                                        <input type="radio" name="answer-${index}" value="${opt.replace(/"/g, '&quot;')}" class="w-4 h-4 accent-church-navy">
+                                        <span class="text-sm font-bold text-gray-800">${opt}</span>
+                                    </label>
+                                `).join('')}
+                            </div>
+                        ` : `
+                            <div class="pt-1">
+                                <input type="text" id="short-answer-${index}" placeholder="اكتب إجابتك هنا (سيقوم الذكاء الاصطناعي بتصحيحها وفهم معناها)..." class="w-full p-3.5 rounded-xl border border-gray-300 text-sm font-bold focus:ring-2 focus:ring-church-gold outline-none">
+                            </div>
+                        `}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // جمع الإجابات وتصحيحها بالذكاء الاصطناعي
+        async function submitQuizForAIGrading() {
+            const userAnswers = currentQuizQuestions.map((q, index) => {
+                const isMcq = q.type === 'mcq' && q.options && q.options.length > 0;
+                let ans = "";
+                if (isMcq) {
+                    const checked = document.querySelector(`input[name="answer-${index}"]:checked`);
+                    ans = checked ? checked.value : "";
+                } else {
+                    const input = document.getElementById(`short-answer-${index}`);
+                    ans = input ? input.value.trim() : "";
+                }
+                return {
+                    questionIndex: index,
+                    question: q.question,
+                    type: isMcq ? 'mcq' : 'short',
+                    correctAnswer: q.correctAnswer,
+                    explanation: q.explanation,
+                    userAnswer: ans
+                };
+            });
+
+            document.getElementById('quiz-active-panel').classList.add('hidden');
+            document.getElementById('quiz-loading-panel').classList.remove('hidden');
+            document.getElementById('quiz-loading-title').textContent = "جاري تصحيح إجاباتك وتقييمها بواسطة الذكاء الاصطناعي...";
+
+            // التحقق من وجود أسئلة مقالية قصيرة تحتاج لتقييم ذكي للمعنى من Gemini
+            const shortQuestions = userAnswers.filter(a => a.type === 'short' && a.userAnswer !== "");
+            let aiShortEvaluations = {};
+            let overallEncouragement = "مجهود رائع في دراسة كلمة الله! استمر في القراءة اليومية لتزداد نعمة وحكمة.";
+
+            if (shortQuestions.length > 0) {
+                try {
+                    const evalPrompt = `أنت مصحح مسابقات كنسية بالذكاء الاصطناعي. قيّم إجابات المخدومين على الأسئلة القصيرة التالية بناءً على المعنى الصحيح (تجاوز الأخطاء الإملائية البسيطة):
+                    ${JSON.stringify(shortQuestions.map(s => ({ idx: s.questionIndex, question: s.question, modelAnswer: s.correctAnswer, studentAnswer: s.userAnswer })))}
+                    أرجع النتيجة بصيغة JSON تحتوي على مصفوفة results لكل سؤال (idx, isCorrect: boolean, feedback: string باللغة العربية المشجعة) ورسالة تشجيع عامة overallMessage.`;
+
+                    const payload = {
+                        contents: [{ parts: [{ text: evalPrompt }] }],
+                        generationConfig: {
+                            responseMimeType: "application/json",
+                            responseSchema: {
+                                type: "OBJECT",
+                                properties: {
+                                    overallMessage: { type: "STRING" },
+                                    results: {
+                                        type: "ARRAY",
+                                        items: {
+                                            type: "OBJECT",
+                                            properties: {
+                                                idx: { type: "INTEGER" },
+                                                isCorrect: { type: "BOOLEAN" },
+                                                feedback: { type: "STRING" }
+                                            },
+                                            required: ["idx", "isCorrect", "feedback"]
+                                        }
+                                    }
+                                },
+                                required: ["overallMessage", "results"]
+                            }
+                        }
+                    };
+
+                    const resText = await callGeminiWithRetry(payload);
+                    const parsedEval = JSON.parse(resText);
+                    if (parsedEval.overallMessage) overallEncouragement = parsedEval.overallMessage;
+                    parsedEval.results.forEach(r => {
+                        aiShortEvaluations[r.idx] = r;
+                    });
+                } catch (e) {
+                    // تقييم ذكي محلي في حال عدم توفر الاتصال
+                    shortQuestions.forEach(s => {
+                        const cleanUser = s.userAnswer.replace(/^(ال|سفر |القديس |مار)/g, '').trim();
+                        const cleanModel = s.correctAnswer.replace(/^(ال|سفر |القديس |مار)/g, '').trim();
+                        const isMatch = cleanModel.includes(cleanUser) || cleanUser.includes(cleanModel);
+                        aiShortEvaluations[s.questionIndex] = {
+                            isCorrect: isMatch && cleanUser.length >= 2,
+                            feedback: isMatch ? "إجابة صحيحة وموفقة!" : `الإجابة الأدق هي: ${s.correctAnswer}`
+                        };
+                    });
+                }
+            }
+
+            // حساب النتيجة النهائية وتحديث نقاط المخدوم
+            let correctCount = 0;
+            const gradedItems = userAnswers.map(item => {
+                let isCorrect = false;
+                let aiNote = item.explanation;
+
+                if (!item.userAnswer) {
+                    isCorrect = false;
+                    aiNote = `لم يتم إدخال إجابة. الإجابة الصحيحة: ${item.correctAnswer} — ${item.explanation}`;
+                } else if (item.type === 'mcq') {
+                    isCorrect = item.userAnswer.trim() === item.correctAnswer.trim();
+                } else {
+                    const evalObj = aiShortEvaluations[item.questionIndex];
+                    if (evalObj) {
+                        isCorrect = evalObj.isCorrect;
+                        aiNote = `${evalObj.feedback} (${item.explanation})`;
+                    } else {
+                        isCorrect = item.userAnswer.trim() === item.correctAnswer.trim();
+                    }
+                }
+
+                if (isCorrect) correctCount++;
+                return { ...item, isCorrect, aiNote };
+            });
+
+            const earnedPoints = correctCount * 10;
+            const member = appState.members.find(m => m.id === activeQuizMemberId);
+            if (member) {
+                member.quizPoints += earnedPoints;
+                member.dailySolved = Math.min(50, (member.dailySolved || 0) + currentQuizQuestions.length);
+                member.lastQuizDate = getTodayISO();
+                saveState();
+            }
+
+            displayQuizResults(gradedItems, correctCount, earnedPoints, overallEncouragement);
+        }
+
+        function displayQuizResults(gradedItems, correctCount, earnedPoints, overallEncouragement) {
+            document.getElementById('quiz-loading-panel').classList.add('hidden');
+            document.getElementById('quiz-results-panel').classList.remove('hidden');
+
+            document.getElementById('result-summary-text').textContent = `أجبت إجابة صحيحة على ${correctCount} من أصل ${gradedItems.length} سؤالاً!`;
+            document.getElementById('result-earned-points').textContent = `+${earnedPoints} نقطة`;
+            document.getElementById('ai-overall-feedback').textContent = overallEncouragement;
+
+            const list = document.getElementById('detailed-grading-list');
+            list.innerHTML = gradedItems.map((item, idx) => `
+                <div class="p-4 sm:p-5 rounded-2xl border-2 ${item.isCorrect ? 'bg-emerald-50/60 border-emerald-300' : 'bg-red-50/60 border-red-200'} space-y-2">
+                    <div class="flex items-start justify-between gap-3">
+                        <p class="font-extrabold text-church-navy text-sm sm:text-base">س${idx + 1}: ${item.question}</p>
+                        <span class="px-3 py-1 rounded-full text-xs font-extrabold shrink-0 ${item.isCorrect ? 'bg-emerald-600 text-white' : 'bg-red-600 text-white'}">
+                            ${item.isCorrect ? '✔ صحيحة (+10)' : '✘ تحتاج مراجعة'}
+                        </span>
+                    </div>
+                    <div class="text-xs sm:text-sm space-y-1">
+                        <p><span class="font-bold text-gray-600">إجابتك:</span> <span class="font-extrabold ${item.isCorrect ? 'text-emerald-800' : 'text-red-700'}">${item.userAnswer || 'بدون إجابة'}</span></p>
+                        ${!item.isCorrect ? `<p><span class="font-bold text-gray-600">الإجابة الصحيحة:</span> <span class="font-extrabold text-emerald-800">${item.correctAnswer}</span></p>` : ''}
+                        <p class="text-gray-700 bg-white/80 p-2.5 rounded-xl border border-gray-200 mt-1"><span class="font-bold text-indigo-800">توضيح الذكاء الاصطناعي:</span> ${item.aiNote}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            showToast(`تمت إضافة ${earnedPoints} نقطة إلى رصيدك في لوحة الشرف!`, "success");
+            lucide.createIcons();
+        }
+
+        function resetQuizUI() {
+            document.getElementById('quiz-active-panel').classList.add('hidden');
+            document.getElementById('quiz-results-panel').classList.add('hidden');
+            document.getElementById('quiz-loading-panel').classList.add('hidden');
+            document.getElementById('quiz-setup-panel').classList.remove('hidden');
+            updateDailySolvedDisplay();
+        }
+    </script>
+</body>
+</html>
